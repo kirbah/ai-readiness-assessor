@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import questionsData from "./data/questions.json";
 import ProgressBar from "./components/ProgressBar";
 import QuestionCard from "./components/QuestionCard";
@@ -92,8 +92,43 @@ function App() {
     return "At Risk";
   };
 
+  // Check for URL parameters on initial load for direct results access
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlAnswers = {};
+    let hasValidAnswers = false;
+
+    // Parse q1=1a, q2=2b, etc. format
+    for (let i = 1; i <= totalQuestions; i++) {
+      const paramKey = `q${i}`;
+      const answerId = urlParams.get(paramKey);
+      if (answerId) {
+        // Validate answerId format (e.g., "1a", "2b")
+        if (/^\d+[a-c]$/.test(answerId)) {
+          urlAnswers[i] = answerId;
+          hasValidAnswers = true;
+        }
+      }
+    }
+
+    if (hasValidAnswers && Object.keys(urlAnswers).length === totalQuestions) {
+      // Valid complete answers in URL - populate state and show results
+      setUserAnswers(urlAnswers);
+      setShowResults(true);
+      // Don't use localStorage when loading from URL
+      return;
+    }
+  }, [totalQuestions]);
+
   // Handle page refresh - if we have partial answers, resume from last unanswered question
-  React.useEffect(() => {
+  useEffect(() => {
+    // Check if URL has parameters first
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.toString()) {
+      // URL params take precedence - skip localStorage
+      return;
+    }
+
     const savedAnswers = localStorage.getItem("aiAssessmentAnswers");
 
     if (savedAnswers) {
@@ -135,8 +170,26 @@ function App() {
       }
     );
 
+    // Generate shareable URL
+    const shareUrlParams = new URLSearchParams();
+    for (let i = 1; i <= totalQuestions; i++) {
+      const answerId = userAnswers[i];
+      if (answerId) {
+        shareUrlParams.set(`q${i}`, answerId);
+      }
+    }
+    const shareableUrl = `${window.location.origin}${
+      window.location.pathname
+    }?${shareUrlParams.toString()}`;
+
     return (
-      <ResultsPage score={score} total={20} tier={tier} results={results} />
+      <ResultsPage
+        score={score}
+        total={20}
+        tier={tier}
+        results={results}
+        shareableUrl={shareableUrl}
+      />
     );
   }
 

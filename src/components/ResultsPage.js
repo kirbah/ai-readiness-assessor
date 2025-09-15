@@ -1,74 +1,11 @@
 import React from "react";
 
-const ResultsPage = ({ score, total, tier, results }) => {
-  // Static placeholder - will receive actual results data later
-  const mockScore = 14;
-  const mockTotal = 20;
-  const mockTier = "Building Foundation";
-  const mockResults = [
-    {
-      question: 1,
-      selected: "1b",
-      score: 1,
-      explanation: "This is common but carries risk.",
-    },
-    {
-      question: 2,
-      selected: "2a",
-      score: 2,
-      explanation: "Excellent. Easy access to high-quality data.",
-    },
-    {
-      question: 3,
-      selected: "3c",
-      score: 0,
-      explanation: "This is a critical weakness.",
-    },
-    {
-      question: 4,
-      selected: "4a",
-      score: 2,
-      explanation: "Excellent. A realistic understanding.",
-    },
-    {
-      question: 5,
-      selected: "5b",
-      score: 1,
-      explanation:
-        "This model can work, but requires strong project management.",
-    },
-    {
-      question: 6,
-      selected: "6a",
-      score: 2,
-      explanation: "Ideal. This aligns the technical team's goals.",
-    },
-    {
-      question: 7,
-      selected: "7c",
-      score: 0,
-      explanation: "This is a critical oversight.",
-    },
-    {
-      question: 8,
-      selected: "8b",
-      score: 1,
-      explanation:
-        "This is better than nothing, but a manual process may be too slow.",
-    },
-    {
-      question: 9,
-      selected: "9a",
-      score: 2,
-      explanation: "Perfect. This ensures your project is aligned.",
-    },
-    {
-      question: 10,
-      selected: "10b",
-      score: 1,
-      explanation: "Awareness is the first step, but it is not enough.",
-    },
-  ];
+const ResultsPage = ({ score, total, tier, results, shareableUrl }) => {
+  // Remove mock data - use actual props
+  const mockScore = score;
+  const mockTotal = total;
+  const mockTier = tier;
+  const mockResults = results;
 
   const tierDescriptions = {
     "At Risk":
@@ -169,23 +106,25 @@ const ResultsPage = ({ score, total, tier, results }) => {
                   <input
                     type="text"
                     className="form-control"
-                    value={
-                      window.location.origin +
-                      window.location.pathname +
-                      "?score=14"
-                    }
+                    value={shareableUrl || window.location.href}
                     readOnly
                   />
                   <button
                     className="btn btn-outline-secondary"
                     type="button"
                     onClick={() =>
-                      navigator.clipboard.writeText(window.location.href)
+                      navigator.clipboard.writeText(
+                        shareableUrl || window.location.href
+                      )
                     }
                   >
                     Copy Link
                   </button>
                 </div>
+                <small className="text-muted">
+                  Anyone with this link can see your AI readiness assessment
+                  results
+                </small>
               </div>
             </div>
           </div>
