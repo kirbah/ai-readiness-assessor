@@ -94,11 +94,9 @@ function App() {
 
   // Handle page refresh - if we have partial answers, resume from last unanswered question
   React.useEffect(() => {
-    const savedIndex = localStorage.getItem("aiAssessmentCurrentIndex");
     const savedAnswers = localStorage.getItem("aiAssessmentAnswers");
 
-    if (savedIndex && savedAnswers) {
-      const index = parseInt(savedIndex);
+    if (savedAnswers) {
       const answers = JSON.parse(savedAnswers);
 
       // Find the next unanswered question
@@ -118,7 +116,7 @@ function App() {
         setCurrentQuestionIndex(resumeIndex);
       }
     }
-  }, []);
+  }, [questions, totalQuestions]);
 
   if (showResults) {
     const score = calculateScore();
