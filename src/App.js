@@ -1,14 +1,146 @@
-import React from "react";
+import React, { useState } from "react";
+import questionsData from "./data/questions.json";
 import ProgressBar from "./components/ProgressBar";
 import QuestionCard from "./components/QuestionCard";
 import ResultsPage from "./components/ResultsPage";
 import "./App.css";
 
 function App() {
-  // Static mock data for Phase 2 - no state management yet
-  const currentQuestion = 3;
-  const totalQuestions = 10;
-  const showResults = false; // Static flag - will be dynamic later
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(() => {
+    // Load current question index from localStorage, default to 0
+    const savedIndex = localStorage.getItem("aiAssessmentCurrentIndex");
+    return savedIndex ? parseInt(savedIndex) : 0;
+  });
+
+  const [userAnswers, setUserAnswers] = useState(() => {
+    // Load user answers from localStorage, default to empty object
+    const savedAnswers = localStorage.getItem("aiAssessmentAnswers");
+    return savedAnswers ? JSON.parse(savedAnswers) : {};
+  });
+
+  const [showResults, setShowResults] = useState(() => {
+    // Check if we should show results based on saved state
+    const savedIndex = localStorage.getItem("aiAssessmentCurrentIndex");
+    const savedAnswers = localStorage.getItem("aiAssessmentAnswers");
+    if (savedIndex && savedAnswers) {
+      const index = parseInt(savedIndex);
+      const answers = JSON.parse(savedAnswers);
+      const totalQuestions = questionsData.length;
+      // Show results if last question was completed
+      return (
+        index >= totalQuestions - 1 &&
+        Object.keys(answers).length === totalQuestions
+      );
+    }
+    return false;
+  });
+
+  const questions = questionsData;
+  const totalQuestions = questions.length;
+  const currentQuestion = questions[currentQuestionIndex];
+
+  const handleAnswerSelect = (answerId) => {
+    // Save the user's answer for this question
+    const newAnswers = {
+      ...userAnswers,
+      [currentQuestion.id]: answerId,
+    };
+    setUserAnswers(newAnswers);
+
+    // Save to localStorage
+    localStorage.setItem("aiAssessmentAnswers", JSON.stringify(newAnswers));
+
+    // If not the last question, move to next
+    if (currentQuestionIndex < totalQuestions - 1) {
+      const newIndex = currentQuestionIndex + 1;
+      setCurrentQuestionIndex(newIndex);
+      localStorage.setItem("aiAssessmentCurrentIndex", newIndex.toString());
+    } else {
+      // Last question - show results
+      setShowResults(true);
+      // Clear the current index but keep answers for results
+      localStorage.setItem(
+        "aiAssessmentCurrentIndex",
+        totalQuestions.toString()
+      );
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentQuestionIndex > 0) {
+      const newIndex = currentQuestionIndex - 1;
+      setCurrentQuestionIndex(newIndex);
+      localStorage.setItem("aiAssessmentCurrentIndex", newIndex.toString());
+    }
+  };
+
+  const calculateScore = () => {
+    let totalScore = 0;
+    Object.entries(userAnswers).forEach(([questionId, answerId]) => {
+      const question = questions.find((q) => q.id === parseInt(questionId));
+      const answer = question.answers.find((a) => a.id === answerId);
+      if (answer) {
+        totalScore += answer.score;
+      }
+    });
+    return totalScore;
+  };
+
+  const getTier = (score) => {
+    if (score >= 15) return "Well-Positioned";
+    if (score >= 8) return "Building Foundation";
+    return "At Risk";
+  };
+
+  // Handle page refresh - if we have partial answers, resume from last unanswered question
+  React.useEffect(() => {
+    const savedIndex = localStorage.getItem("aiAssessmentCurrentIndex");
+    const savedAnswers = localStorage.getItem("aiAssessmentAnswers");
+
+    if (savedIndex && savedAnswers) {
+      const index = parseInt(savedIndex);
+      const answers = JSON.parse(savedAnswers);
+
+      // Find the next unanswered question
+      let resumeIndex = 0;
+      for (let i = 0; i < totalQuestions; i++) {
+        const questionId = questions[i].id;
+        if (!answers[questionId]) {
+          resumeIndex = i;
+          break;
+        }
+      }
+
+      // If all questions answered, show results
+      if (resumeIndex === totalQuestions) {
+        setShowResults(true);
+      } else {
+        setCurrentQuestionIndex(resumeIndex);
+      }
+    }
+  }, []);
+
+  if (showResults) {
+    const score = calculateScore();
+    const tier = getTier(score);
+
+    const results = Object.entries(userAnswers).map(
+      ([questionId, answerId]) => {
+        const question = questions.find((q) => q.id === parseInt(questionId));
+        const answer = question.answers.find((a) => a.id === answerId);
+        return {
+          question: parseInt(questionId),
+          selected: answerId,
+          score: answer ? answer.score : 0,
+          explanation: answer ? answer.explanation : "No explanation available",
+        };
+      }
+    );
+
+    return (
+      <ResultsPage score={score} total={20} tier={tier} results={results} />
+    );
+  }
 
   return (
     <div className="App">
@@ -25,18 +157,22 @@ function App() {
           </div>
 
           {/* Main Content */}
-          {!showResults ? (
-            <>
-              {/* Progress Bar */}
-              <ProgressBar current={currentQuestion} total={totalQuestions} />
+          <>
+            {/* Progress Bar */}
+            <ProgressBar
+              current={currentQuestionIndex + 1}
+              total={totalQuestions}
+            />
 
-              {/* Question Card */}
-              <QuestionCard />
-            </>
-          ) : (
-            // Results Page
-            <ResultsPage />
-          )}
+            {/* Question Card */}
+            <QuestionCard
+              question={currentQuestion}
+              onAnswerSelect={handleAnswerSelect}
+              onPrevious={handlePrevious}
+              showPrevious={currentQuestionIndex > 0}
+              userAnswer={userAnswers[currentQuestion.id]}
+            />
+          </>
         </div>
       </div>
     </div>
