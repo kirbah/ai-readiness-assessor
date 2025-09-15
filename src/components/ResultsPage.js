@@ -71,7 +71,7 @@ const ResultsPage = ({
               <h3 className="mb-4">Detailed Assessment</h3>
               <div className="row g-3">
                 {results.map((result, index) => (
-                  <div key={index} className="col-md-6">
+                  <div key={index} className="col-12">
                     <div
                       className={`card ${
                         result.score === 2
@@ -79,14 +79,14 @@ const ResultsPage = ({
                           : result.score === 1
                           ? "border-warning"
                           : "border-danger"
-                      } h-100`}
+                      }`}
                     >
                       <div className="card-body">
                         <h6 className="card-title mb-2">
-                          Question {result.question}
+                          Question {result.question}: {result.question_text}
                         </h6>
                         <p className="card-text small text-muted mb-2">
-                          Selected: <strong>{result.selected}</strong>
+                          Selected: <strong>{result.selected_text}</strong>
                         </p>
                         <div
                           className={`badge fs-6 mb-2 ${

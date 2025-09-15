@@ -122,7 +122,10 @@ function App() {
         const answer = question.answers.find((a) => a.id === answerId);
         return {
           question: parseInt(questionId),
-          selected: answerId,
+          question_text: question
+            ? question.question_text
+            : "Question unavailable",
+          selected_text: answer ? answer.answer_text : "Answer unavailable",
           score: answer ? answer.score : 0,
           explanation: answer ? answer.explanation : "No explanation available",
         };
