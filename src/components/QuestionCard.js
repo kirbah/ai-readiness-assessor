@@ -6,8 +6,11 @@ const QuestionCard = ({
   onPrevious,
   showPrevious = false,
   userAnswer,
+  currentQuestionId,
 }) => {
+  const isCurrentQuestion = currentQuestionId === question.id;
   const isAnswered = !!userAnswer;
+  const allowChanges = isAnswered && !isCurrentQuestion; // Allow changes when revisiting previous questions
 
   const handleAnswerClick = (answerId) => {
     if (onAnswerSelect) {
@@ -39,25 +42,41 @@ const QuestionCard = ({
         <div className="answers mb-4">
           {question.answers.map((answer) => {
             const isSelected = userAnswer === answer.id;
-            const buttonClass = isAnswered
-              ? isSelected
+            let buttonClass, isDisabled, opacityClass;
+
+            if (isCurrentQuestion && isAnswered) {
+              // Current question, already answered - disable all
+              buttonClass = isSelected
                 ? "btn-primary"
-                : "btn-outline-secondary"
-              : "btn-outline-primary";
+                : "btn-outline-secondary";
+              isDisabled = true;
+              opacityClass = isSelected ? "" : "opacity-50";
+            } else if (allowChanges && isAnswered) {
+              // Previous question, allow changing answer
+              buttonClass = "btn-outline-primary";
+              isDisabled = false;
+              opacityClass = "";
+            } else {
+              // Not answered yet
+              buttonClass = "btn-outline-primary";
+              isDisabled = false;
+              opacityClass = "";
+            }
 
             return (
               <button
                 key={answer.id}
-                className={`btn ${buttonClass} w-100 mb-2 text-start ${
-                  isAnswered && !isSelected ? "opacity-50" : ""
-                }`}
-                onClick={() => !isAnswered && handleAnswerClick(answer.id)}
-                disabled={isAnswered}
+                className={`btn ${buttonClass} w-100 mb-2 text-start ${opacityClass}`}
+                onClick={() => !isDisabled && handleAnswerClick(answer.id)}
+                disabled={isDisabled}
               >
                 <div className="d-flex justify-content-between align-items-center">
                   <span>{answer.answer_text}</span>
                   <div>
-                    {isSelected && (
+                    {isSelected && !isCurrentQuestion && (
+                      <span className="badge bg-warning me-2">Change?</span>
+                    )}
+                    {isSelected && isCurrentQuestion && (
                       <span className="badge bg-success me-2">Selected</span>
                     )}
                     <small className="text-muted">
@@ -81,11 +100,15 @@ const QuestionCard = ({
           {!showPrevious && <div className="w-25"></div>}
 
           <button
-            className={`btn btn-primary ${isAnswered ? "" : "opacity-50"}`}
+            className={`btn btn-primary ${
+              isAnswered && isCurrentQuestion ? "" : "opacity-50"
+            }`}
             onClick={handleNextClick}
-            disabled={!isAnswered}
+            disabled={!isAnswered || !isCurrentQuestion}
           >
-            {isAnswered ? "Next" : "Please select an answer"}
+            {isAnswered && isCurrentQuestion
+              ? "Next"
+              : "Please select an answer"}
           </button>
         </div>
       </div>

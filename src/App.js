@@ -74,6 +74,20 @@ function App() {
     }
   };
 
+  const handleRestart = () => {
+    // Clear all state and localStorage
+    setCurrentQuestionIndex(0);
+    setUserAnswers({});
+    setShowResults(false);
+
+    // Clear localStorage
+    localStorage.removeItem("aiAssessmentCurrentIndex");
+    localStorage.removeItem("aiAssessmentAnswers");
+
+    // Clear URL parameters
+    window.history.replaceState({}, document.title, window.location.pathname);
+  };
+
   const calculateScore = () => {
     let totalScore = 0;
     Object.entries(userAnswers).forEach(([questionId, answerId]) => {
@@ -189,6 +203,7 @@ function App() {
         tier={tier}
         results={results}
         shareableUrl={shareableUrl}
+        onRestart={handleRestart}
       />
     );
   }
@@ -222,6 +237,7 @@ function App() {
               onPrevious={handlePrevious}
               showPrevious={currentQuestionIndex > 0}
               userAnswer={userAnswers[currentQuestion.id]}
+              currentQuestionId={currentQuestion.id}
             />
           </>
         </div>

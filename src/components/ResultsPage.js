@@ -1,12 +1,13 @@
 import React from "react";
 
-const ResultsPage = ({ score, total, tier, results, shareableUrl }) => {
-  // Remove mock data - use actual props
-  const mockScore = score;
-  const mockTotal = total;
-  const mockTier = tier;
-  const mockResults = results;
-
+const ResultsPage = ({
+  score,
+  total,
+  tier,
+  results,
+  shareableUrl,
+  onRestart,
+}) => {
   const tierDescriptions = {
     "At Risk":
       "Your readiness level indicates critical gaps that pose a high risk of project failure.",
@@ -17,11 +18,17 @@ const ResultsPage = ({ score, total, tier, results, shareableUrl }) => {
   };
 
   const tierColor =
-    mockTier === "Well-Positioned"
+    tier === "Well-Positioned"
       ? "success"
-      : mockTier === "Building Foundation"
+      : tier === "Building Foundation"
       ? "warning"
       : "danger";
+
+  const handleRestart = () => {
+    if (onRestart) {
+      onRestart();
+    }
+  };
 
   return (
     <div className="container mt-5">
@@ -35,15 +42,15 @@ const ResultsPage = ({ score, total, tier, results, shareableUrl }) => {
               {/* Score Summary */}
               <div className="text-center mb-5">
                 <div className="display-4 fw-bold text-{tierColor} mb-3">
-                  {mockScore}/{mockTotal}
+                  {score}/{total}
                 </div>
-                <h2 className="text-{tierColor} mb-1">{mockTier}</h2>
-                <p className="lead text-muted">{tierDescriptions[mockTier]}</p>
+                <h2 className="text-{tierColor} mb-1">{tier}</h2>
+                <p className="lead text-muted">{tierDescriptions[tier]}</p>
 
                 <div className="progress mt-4" style={{ height: "20px" }}>
                   <div
                     className={`progress-bar bg-${tierColor}`}
-                    style={{ width: `${(mockScore / mockTotal) * 100}%` }}
+                    style={{ width: `${(score / total) * 100}%` }}
                   ></div>
                 </div>
               </div>
@@ -63,7 +70,7 @@ const ResultsPage = ({ score, total, tier, results, shareableUrl }) => {
               {/* Detailed Results */}
               <h3 className="mb-4">Detailed Assessment</h3>
               <div className="row g-3">
-                {mockResults.map((result, index) => (
+                {results.map((result, index) => (
                   <div key={index} className="col-md-6">
                     <div
                       className={`card ${
@@ -125,6 +132,19 @@ const ResultsPage = ({ score, total, tier, results, shareableUrl }) => {
                   Anyone with this link can see your AI readiness assessment
                   results
                 </small>
+              </div>
+
+              {/* Restart Section */}
+              <div className="text-center mt-4">
+                <button
+                  className="btn btn-outline-primary btn-lg"
+                  onClick={handleRestart}
+                >
+                  Restart Assessment
+                </button>
+                <p className="text-muted mt-2 small">
+                  Start over to see how different choices affect your results
+                </p>
               </div>
             </div>
           </div>
