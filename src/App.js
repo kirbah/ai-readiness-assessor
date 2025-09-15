@@ -125,7 +125,11 @@ function App() {
           question_text: question
             ? question.question_text
             : "Question unavailable",
+          question_clarification: question
+            ? question.question_clarification
+            : "",
           selected_text: answer ? answer.answer_text : "Answer unavailable",
+          selected_clarification: answer ? answer.answer_clarification : "",
           score: answer ? answer.score : 0,
           explanation: answer ? answer.explanation : "No explanation available",
         };

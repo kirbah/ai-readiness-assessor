@@ -69,37 +69,87 @@ const ResultsPage = ({
 
               {/* Detailed Results */}
               <h3 className="mb-4">Detailed Assessment</h3>
-              <div className="row g-3">
+              <div className="accordion" id="resultsAccordion">
                 {results.map((result, index) => (
-                  <div key={index} className="col-12">
-                    <div
-                      className={`card ${
-                        result.score === 2
-                          ? "border-success"
-                          : result.score === 1
-                          ? "border-warning"
-                          : "border-danger"
-                      }`}
-                    >
-                      <div className="card-body">
-                        <h6 className="card-title mb-2">
-                          Question {result.question}: {result.question_text}
-                        </h6>
-                        <p className="card-text small text-muted mb-2">
-                          Selected: <strong>{result.selected_text}</strong>
-                        </p>
-                        <div
-                          className={`badge fs-6 mb-2 ${
-                            result.score === 2
-                              ? "bg-success"
-                              : result.score === 1
-                              ? "bg-warning"
-                              : "bg-danger"
-                          }`}
-                        >
-                          Score: {result.score}
+                  <div key={index} className="accordion-item">
+                    <h2 className="accordion-header" id={`heading${index}`}>
+                      <button
+                        className={`accordion-button collapsed ${
+                          result.score === 2
+                            ? "border-start border-success border-4"
+                            : result.score === 1
+                            ? "border-start border-warning border-4"
+                            : "border-start border-danger border-4"
+                        }`}
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target={`#collapse${index}`}
+                        aria-expanded="false"
+                        aria-controls={`collapse${index}`}
+                      >
+                        <div className="d-flex justify-content-between align-items-center w-100">
+                          <div className="flex-grow-1">
+                            <h6 className="mb-1">
+                              Question {result.question}: {result.question_text}
+                            </h6>
+                            <p className="mb-1 small text-muted">
+                              Selected: <strong>{result.selected_text}</strong>
+                            </p>
+                            <div
+                              className={`badge fs-6 ${
+                                result.score === 2
+                                  ? "bg-success"
+                                  : result.score === 1
+                                  ? "bg-warning text-dark"
+                                  : "bg-danger"
+                              }`}
+                            >
+                              Score: {result.score}/2
+                            </div>
+                          </div>
+                          <div className="flex-shrink-0 ms-2">
+                            <span className="accordion-button-icon">+</span>
+                          </div>
                         </div>
-                        <p className="card-text small">{result.explanation}</p>
+                      </button>
+                    </h2>
+                    <div
+                      id={`collapse${index}`}
+                      className="accordion-collapse collapse"
+                      aria-labelledby={`heading${index}`}
+                      data-bs-parent="#resultsAccordion"
+                    >
+                      <div className="accordion-body">
+                        {result.question_clarification && (
+                          <div className="mb-3">
+                            <h6 className="fw-bold text-secondary mb-2">
+                              Question Context
+                            </h6>
+                            <p className="small text-muted">
+                              {result.question_clarification}
+                            </p>
+                          </div>
+                        )}
+
+                        {result.selected_clarification && (
+                          <div className="mb-3">
+                            <h6 className="fw-bold text-secondary mb-2">
+                              Selection Context
+                            </h6>
+                            <p className="small text-muted">
+                              {result.selected_clarification}
+                            </p>
+                          </div>
+                        )}
+
+                        {result.explanation && (
+                          <div className="mb-3">
+                            <h6 className="fw-bold text-primary mb-2">
+                              Assessment
+                            </h6>
+                            <p className="small">{result.explanation}</p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
