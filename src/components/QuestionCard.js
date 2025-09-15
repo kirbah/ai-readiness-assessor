@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 const QuestionCard = ({
   question,
@@ -9,6 +9,7 @@ const QuestionCard = ({
   userAnswer,
 }) => {
   const isAnswered = !!userAnswer;
+  const [expandedAnswer, setExpandedAnswer] = useState(null);
 
   return (
     <div className="card shadow-sm mb-4">
@@ -28,21 +29,60 @@ const QuestionCard = ({
               : "btn-outline-primary";
 
             return (
-              <button
-                key={answer.id}
-                className={`btn ${buttonClass} w-100 mb-2 text-start`}
-                onClick={() => onAnswerSelect(answer.id)}
-              >
-                <div className="d-flex justify-content-between align-items-center">
-                  <span>{answer.answer_text}</span>
-                  {isSelected && (
-                    <span className="badge bg-success me-2">Selected</span>
-                  )}
-                </div>
-              </button>
+              <>
+                <button
+                  key={`${answer.id}-btn`}
+                  className={`btn ${buttonClass} w-100 mb-2 text-start`}
+                  onClick={() => onAnswerSelect(answer.id)}
+                  onMouseEnter={() => setExpandedAnswer(answer.id)}
+                  onMouseLeave={() => setExpandedAnswer(null)}
+                  onTouchStart={() => setExpandedAnswer(answer.id)}
+                  onTouchEnd={() => {
+                    // Delay clearing to allow seeing the panel briefly
+                    setTimeout(() => setExpandedAnswer(null), 2000);
+                  }}
+                >
+                  <div className="d-flex justify-content-between align-items-center">
+                    <span>{answer.answer_text}</span>
+                    {isSelected && (
+                      <span className="badge bg-success me-2">Selected</span>
+                    )}
+                  </div>
+                </button>
+                {expandedAnswer === answer.id && (
+                  <div
+                    className="mb-2 p-3 bg-light rounded shadow-sm border-start border-primary border-3"
+                    role="note"
+                  >
+                    <small className="text-muted">
+                      <i className="bi bi-info-circle me-1"></i>
+                      {answer.answer_clarification}
+                    </small>
+                  </div>
+                )}
+              </>
             );
           })}
         </div>
+
+        {isAnswered && (
+          <div
+            className="alert alert-light border-start border-primary border-3 mb-3 ps-3"
+            role="note"
+          >
+            <small className="text-muted">
+              <strong>Why this choice?</strong>{" "}
+              {(() => {
+                const selectedAnswer = question.answers.find(
+                  (a) => a.id === userAnswer
+                );
+                return selectedAnswer
+                  ? selectedAnswer.answer_clarification
+                  : "";
+              })()}
+            </small>
+          </div>
+        )}
 
         <div className="d-flex justify-content-between">
           {showPrevious && (
@@ -50,7 +90,7 @@ const QuestionCard = ({
               Previous
             </button>
           )}
-          {!showPrevious && <div className="w-25"></div>} 
+          {!showPrevious && <div className="w-25"></div>}
 
           <button
             className="btn btn-primary"
