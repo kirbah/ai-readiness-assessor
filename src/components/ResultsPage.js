@@ -66,9 +66,9 @@ const ResultsPage = ({
   };
 
   const getIconForScore = (score) => {
-    if (score === 0) return "●"; // Red circle for critical
+    if (score === 0) return "✖"; // Red cross for critical
     if (score === 1) return "▲"; // Yellow triangle for issues
-    return "●"; // Green circle for good
+    return "✔"; // Green check for good
   };
 
   const getColorForScore = (score) => {
