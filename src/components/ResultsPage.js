@@ -14,6 +14,7 @@ const ResultsPage = ({
   onRestart,
 }) => {
   const [filter, setFilter] = useState(initialFilter || "all");
+  const [isCopied, setIsCopied] = useState(false);
 
   const tierDescriptions = {
     "At Risk":
@@ -59,16 +60,17 @@ const ResultsPage = ({
   const handleCopyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(shareableUrl || window.location.href);
-      // Could add a toast notification here
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2500);
     } catch (err) {
       console.error("Failed to copy: ", err);
     }
   };
 
   const getIconForScore = (score) => {
-    if (score === 0) return "✖"; // Red cross for critical
-    if (score === 1) return "▲"; // Yellow triangle for issues
-    return "✔"; // Green check for good
+    if (score === 0) return "🔴"; // Filled red circle for critical
+    if (score === 1) return "🟡"; // Filled amber triangle for issues
+    return "🟢"; // Filled green circle for good
   };
 
   const getColorForScore = (score) => {
@@ -288,7 +290,8 @@ const ResultsPage = ({
                     onClick={handleCopyToClipboard}
                     aria-label="Copy share link"
                   >
-                    <i className="bi bi-copy"></i> Copy Link
+                    <i className="bi bi-copy"></i>{" "}
+                    {isCopied ? "Copied!" : "Copy Link"}
                   </button>
                 </div>
                 <small className="text-muted">

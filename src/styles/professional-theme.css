@@ -96,6 +96,23 @@ h4 {
   box-shadow: 0 4px 12px rgba(58, 95, 127, 0.3);
 }
 
+.btn:disabled,
+.btn-primary:disabled {
+  background-color: #e9ecef !important;
+  border-color: #e9ecef !important;
+  color: #6c757d !important;
+  cursor: not-allowed !important;
+  opacity: 0.65;
+}
+
+.btn:disabled:hover,
+.btn-primary:disabled:hover {
+  background-color: #e9ecef !important;
+  border-color: #e9ecef !important;
+  transform: none;
+  box-shadow: none;
+}
+
 .btn-outline-primary {
   color: var(--bs-primary);
   border-color: var(--bs-primary);
@@ -134,8 +151,8 @@ h4 {
 
 .answer-row.selected {
   border-color: var(--bs-primary);
-  background-color: rgba(58, 95, 127, 0.05);
-  box-shadow: 0 2px 8px rgba(58, 95, 127, 0.15);
+  background-color: #f8f9fa;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .answer-row .form-check {
