@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 const ResultsPage = ({
   score,
@@ -8,6 +8,8 @@ const ResultsPage = ({
   shareableUrl,
   onRestart,
 }) => {
+  const [filter, setFilter] = useState("all");
+
   const tierDescriptions = {
     "At Risk":
       "Your readiness level indicates critical gaps that pose a high risk of project failure.",
@@ -23,6 +25,22 @@ const ResultsPage = ({
       : tier === "Building Foundation"
       ? "warning"
       : "danger";
+
+  // Calculate counts for filters
+  const criticalCount = results.filter((r) => r.score === 0).length;
+  const issuesCount = results.filter((r) => r.score <= 1).length;
+  const allCount = results.length;
+
+  // Filtered results based on current filter
+  const filteredResults = results.filter((result) => {
+    if (filter === "critical") return result.score === 0;
+    if (filter === "issues") return result.score <= 1;
+    return true; // all
+  });
+
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+  };
 
   const handleRestart = () => {
     if (onRestart) {
@@ -69,89 +87,135 @@ const ResultsPage = ({
 
               {/* Detailed Results */}
               <h3 className="mb-4">Detailed Assessment</h3>
-              <div className="accordion" id="resultsAccordion">
-                {results.map((result, index) => (
-                  <div key={index} className="accordion-item">
-                    <h2 className="accordion-header" id={`heading${index}`}>
-                      <button
-                        className={`accordion-button collapsed ${
-                          result.score === 2
-                            ? "border-start border-success border-4"
-                            : result.score === 1
-                            ? "border-start border-warning border-4"
-                            : "border-start border-danger border-4"
-                        }`}
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target={`#collapse${index}`}
-                        aria-expanded="false"
-                        aria-controls={`collapse${index}`}
-                      >
-                        <div className="d-flex justify-content-between align-items-center w-100">
-                          <div className="flex-grow-1">
-                            <h6 className="mb-1">
-                              Question {result.question}: {result.question_text}
-                            </h6>
-                            <p className="mb-1 small text-muted">
-                              Selected: <strong>{result.selected_text}</strong>
-                            </p>
-                            <div
-                              className={`badge fs-6 ${
-                                result.score === 2
-                                  ? "bg-success"
-                                  : result.score === 1
-                                  ? "bg-warning text-dark"
-                                  : "bg-danger"
-                              }`}
-                            >
-                              Score: {result.score}/2
+
+              {/* Filter Buttons */}
+              <div className="d-flex justify-content-center mb-4">
+                <div className="btn-group" role="group">
+                  <button
+                    type="button"
+                    className={`btn ${
+                      filter === "critical"
+                        ? "btn-danger"
+                        : "btn-outline-danger"
+                    }`}
+                    onClick={() => handleFilterChange("critical")}
+                  >
+                    Critical (Red) ({criticalCount})
+                  </button>
+                  <button
+                    type="button"
+                    className={`btn ${
+                      filter === "issues"
+                        ? "btn-warning"
+                        : "btn-outline-warning"
+                    }`}
+                    onClick={() => handleFilterChange("issues")}
+                  >
+                    Issues (Red + Yellow) ({issuesCount})
+                  </button>
+                  <button
+                    type="button"
+                    className={`btn ${
+                      filter === "all" ? "btn-primary" : "btn-outline-primary"
+                    }`}
+                    onClick={() => handleFilterChange("all")}
+                  >
+                    All ({allCount})
+                  </button>
+                </div>
+              </div>
+
+              {filteredResults.length === 0 ? (
+                <p className="text-center text-muted">
+                  No results match the selected filter.
+                </p>
+              ) : (
+                <div className="accordion" id="resultsAccordion">
+                  {filteredResults.map((result, index) => (
+                    <div key={result.question} className="accordion-item">
+                      <h2 className="accordion-header" id={`heading${index}`}>
+                        <button
+                          className={`accordion-button collapsed ${
+                            result.score === 2
+                              ? "border-start border-success border-4"
+                              : result.score === 1
+                              ? "border-start border-warning border-4"
+                              : "border-start border-danger border-4"
+                          }`}
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target={`#collapse${index}`}
+                          aria-expanded="false"
+                          aria-controls={`collapse${index}`}
+                        >
+                          <div className="d-flex justify-content-between align-items-center w-100">
+                            <div className="flex-grow-1">
+                              <h6 className="mb-1">
+                                Question {result.question}:{" "}
+                                {result.question_text}
+                              </h6>
+                              <p className="mb-1 small text-muted">
+                                Selected:{" "}
+                                <strong>{result.selected_text}</strong>
+                              </p>
+                              <div
+                                className={`badge fs-6 ${
+                                  result.score === 2
+                                    ? "bg-success"
+                                    : result.score === 1
+                                    ? "bg-warning text-dark"
+                                    : "bg-danger"
+                                }`}
+                              >
+                                Score: {result.score}/2
+                              </div>
                             </div>
                           </div>
+                        </button>
+                      </h2>
+                      <div
+                        id={`collapse${index}`}
+                        className="accordion-collapse collapse"
+                        aria-labelledby={`heading${index}`}
+                        data-bs-parent="#resultsAccordion"
+                      >
+                        <div className="accordion-body">
+                          {result.question_clarification && (
+                            <div className="mb-3">
+                              <h6 className="fw-bold text-secondary mb-2">
+                                Question Context
+                              </h6>
+                              <p className="small text-muted">
+                                {result.question_clarification}
+                              </p>
+                            </div>
+                          )}
+
+                          {result.selected_clarification && (
+                            <div className="mb-3">
+                              <h6 className="fw-bold text-secondary mb-2">
+                                Selection Context
+                              </h6>
+                              <p className="small text-muted">
+                                {result.selected_clarification}
+                              </p>
+                            </div>
+                          )}
+
+                          {result.explanation && (
+                            <div className="mb-3">
+                              <h6 className="fw-bold text-primary mb-2">
+                                Assessment
+                              </h6>
+                              <p className="small">{result.explanation}</p>
+                            </div>
+                          )}
                         </div>
-                      </button>
-                    </h2>
-                    <div
-                      id={`collapse${index}`}
-                      className="accordion-collapse collapse"
-                      aria-labelledby={`heading${index}`}
-                      data-bs-parent="#resultsAccordion"
-                    >
-                      <div className="accordion-body">
-                        {result.question_clarification && (
-                          <div className="mb-3">
-                            <h6 className="fw-bold text-secondary mb-2">
-                              Question Context
-                            </h6>
-                            <p className="small text-muted">
-                              {result.question_clarification}
-                            </p>
-                          </div>
-                        )}
-
-                        {result.selected_clarification && (
-                          <div className="mb-3">
-                            <h6 className="fw-bold text-secondary mb-2">
-                              Selection Context
-                            </h6>
-                            <p className="small text-muted">
-                              {result.selected_clarification}
-                            </p>
-                          </div>
-                        )}
-
-                        {result.explanation && (
-                          <div className="mb-3">
-                            <h6 className="fw-bold text-primary mb-2">
-                              Assessment
-                            </h6>
-                            <p className="small">{result.explanation}</p>
-                          </div>
-                        )}
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
 
               {/* Share Section */}
               <div className="text-center mt-5">
