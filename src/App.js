@@ -10,6 +10,7 @@ function App() {
   const [userAnswers, setUserAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
   const [currentFilter, setCurrentFilter] = useState("all");
+  const [editMode, setEditMode] = useState(false);
 
   const questions = useMemo(() => questionsData, []);
   const questionsById = useMemo(() => {
@@ -40,16 +41,36 @@ function App() {
     localStorage.setItem("aiAssessmentCurrentIndex", currentQuestionIndex);
   }, [currentQuestionIndex]);
 
+  const goToQuestion = (questionId) => {
+    setEditMode(true);
+    const index = questions.findIndex((q) => q.id === questionId);
+    if (index !== -1) {
+      setCurrentQuestionIndex(index);
+    }
+    setShowResults(false);
+  };
+
   const handleAnswerSelect = (answerId) => {
     setUserAnswers({
       ...userAnswers,
       [questions[currentQuestionIndex].id]: answerId,
     });
-    handleNext();
+
+    if (editMode) {
+      // In edit mode, return to results after answer change
+      setEditMode(false);
+      setShowResults(true);
+    } else {
+      handleNext();
+    }
   };
 
   const handleNext = () => {
-    if (currentQuestionIndex < totalQuestions - 1) {
+    if (editMode) {
+      // In edit mode, always return to results
+      setEditMode(false);
+      setShowResults(true);
+    } else if (currentQuestionIndex < totalQuestions - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       setShowResults(true);
@@ -67,6 +88,7 @@ function App() {
     setUserAnswers({});
     setShowResults(false);
     setCurrentFilter("all");
+    setEditMode(false);
     localStorage.removeItem("aiAssessmentCurrentIndex");
     localStorage.removeItem("aiAssessmentAnswers");
     window.history.replaceState({}, document.title, window.location.pathname);
@@ -162,6 +184,7 @@ function App() {
         shareableUrl={shareableUrl}
         initialFilter={currentFilter}
         onFilterChange={setCurrentFilter}
+        onEditQuestion={goToQuestion}
         onRestart={handleRestart}
       />
     );
@@ -195,6 +218,8 @@ function App() {
               onPrevious={handlePrevious}
               showPrevious={currentQuestionIndex > 0}
               userAnswer={userAnswers[currentQuestion.id]}
+              isEditMode={editMode}
+              onEditQuestion={goToQuestion}
             />
           </>
         </div>

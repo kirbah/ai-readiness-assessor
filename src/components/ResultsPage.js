@@ -8,6 +8,7 @@ const ResultsPage = ({
   shareableUrl,
   initialFilter,
   onFilterChange,
+  onEditQuestion,
   onRestart,
 }) => {
   const [filter, setFilter] = useState(initialFilter || "all");
@@ -163,16 +164,27 @@ const ResultsPage = ({
                                 Selected:{" "}
                                 <strong>{result.selected_text}</strong>
                               </p>
-                              <div
-                                className={`badge fs-6 ${
-                                  result.score === 2
-                                    ? "bg-success"
-                                    : result.score === 1
-                                    ? "bg-warning text-dark"
-                                    : "bg-danger"
-                                }`}
-                              >
-                                Score: {result.score}/2
+                              <div className="d-flex align-items-center gap-2">
+                                <div
+                                  className={`badge fs-6 ${
+                                    result.score === 2
+                                      ? "bg-success"
+                                      : result.score === 1
+                                      ? "bg-warning text-dark"
+                                      : "bg-danger"
+                                  }`}
+                                >
+                                  Score: {result.score}/2
+                                </div>
+                                <button
+                                  className="btn btn-sm btn-outline-primary"
+                                  onClick={() =>
+                                    onEditQuestion(result.question)
+                                  }
+                                  aria-label={`Edit answer for Question ${result.question}`}
+                                >
+                                  Edit
+                                </button>
                               </div>
                             </div>
                           </div>
