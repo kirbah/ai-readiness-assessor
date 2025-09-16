@@ -79,6 +79,12 @@ const ResultsPage = ({
     return "good";
   };
 
+  const calendlyUrl = shareableUrl
+    ? `https://calendly.com/kiryl-bahdanau/ai-readiness?a3=${encodeURIComponent(
+        shareableUrl
+      )}`
+    : "https://calendly.com/kiryl-bahdanau/ai-readiness";
+
   return (
     <div className="container mt-5">
       <div className="row justify-content-center">
@@ -114,7 +120,12 @@ const ResultsPage = ({
                   Schedule a free consultation to discuss your results and
                   create a customized AI roadmap for your organization.
                 </p>
-                <a href="#contact" className="btn btn-primary btn-lg">
+                <a
+                  href={calendlyUrl}
+                  className="btn btn-primary btn-lg"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <i className="bi bi-calendar3 me-2"></i>
                   Book Consultation Call
                 </a>
