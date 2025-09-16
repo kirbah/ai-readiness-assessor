@@ -9,6 +9,7 @@ function App() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
+  const [currentFilter, setCurrentFilter] = useState("all");
 
   const questions = useMemo(() => questionsData, []);
   const questionsById = useMemo(() => {
@@ -65,6 +66,7 @@ function App() {
     setCurrentQuestionIndex(0);
     setUserAnswers({});
     setShowResults(false);
+    setCurrentFilter("all");
     localStorage.removeItem("aiAssessmentCurrentIndex");
     localStorage.removeItem("aiAssessmentAnswers");
     window.history.replaceState({}, document.title, window.location.pathname);
@@ -110,6 +112,12 @@ function App() {
       setUserAnswers(urlAnswers);
       setShowResults(true);
     }
+
+    // Parse filter from URL
+    const filterParam = urlParams.get("filter");
+    if (filterParam && ["critical", "issues", "all"].includes(filterParam)) {
+      setCurrentFilter(filterParam);
+    }
   }, [totalQuestions]);
 
   if (showResults) {
@@ -140,6 +148,7 @@ function App() {
     Object.entries(userAnswers).forEach(([questionId, answerId]) => {
       shareUrlParams.set(`q${questionId}`, answerId);
     });
+    shareUrlParams.set("filter", currentFilter);
     const shareableUrl = `${window.location.origin}${
       window.location.pathname
     }?${shareUrlParams.toString()}`;
@@ -151,6 +160,8 @@ function App() {
         tier={tier}
         results={results}
         shareableUrl={shareableUrl}
+        initialFilter={currentFilter}
+        onFilterChange={setCurrentFilter}
         onRestart={handleRestart}
       />
     );

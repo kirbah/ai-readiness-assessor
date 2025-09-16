@@ -6,9 +6,11 @@ const ResultsPage = ({
   tier,
   results,
   shareableUrl,
+  initialFilter,
+  onFilterChange,
   onRestart,
 }) => {
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState(initialFilter || "all");
 
   const tierDescriptions = {
     "At Risk":
@@ -40,6 +42,9 @@ const ResultsPage = ({
 
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
+    if (onFilterChange) {
+      onFilterChange(newFilter);
+    }
   };
 
   const handleRestart = () => {
