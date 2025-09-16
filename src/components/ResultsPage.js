@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
 const ResultsPage = ({
   score,
@@ -54,39 +56,64 @@ const ResultsPage = ({
     }
   };
 
+  const handleCopyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(shareableUrl || window.location.href);
+      // Could add a toast notification here
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  };
+
+  const getIconForScore = (score) => {
+    if (score === 0) return "●"; // Red circle for critical
+    if (score === 1) return "▲"; // Yellow triangle for issues
+    return "●"; // Green circle for good
+  };
+
+  const getColorForScore = (score) => {
+    if (score === 0) return "critical";
+    if (score === 1) return "issues";
+    return "good";
+  };
+
   return (
     <div className="container mt-5">
       <div className="row justify-content-center">
-        <div className="col-lg-8">
-          <div className="card shadow-lg">
-            <div className="card-header bg-primary text-white text-center">
-              <h1 className="mb-0">AI Readiness Assessment Results</h1>
+        <div className="col-lg-10">
+          <div className="card">
+            <div className="card-header text-center">
+              <h1 className="h3 mb-0">Your AI Readiness Report</h1>
             </div>
             <div className="card-body p-4">
               {/* Score Summary */}
               <div className="text-center mb-5">
-                <div className={`display-4 fw-bold text-${tierColor} mb-3`}>
-                  {score}/{total}
+                <div className="mb-4">
+                  <CircularProgressbar
+                    value={score}
+                    maxValue={total}
+                    text={`${score}/20`}
+                    styles={buildStyles({
+                      pathColor: `var(--bs-primary)`,
+                      textColor: `var(--bs-primary)`,
+                      trailColor: `#e9ecef`,
+                      backgroundColor: `#f8f9fa`,
+                    })}
+                  />
                 </div>
                 <h2 className={`text-${tierColor} mb-1`}>{tier}</h2>
                 <p className="lead text-muted">{tierDescriptions[tier]}</p>
-
-                <div className="progress mt-4" style={{ height: "20px" }}>
-                  <div
-                    className={`progress-bar bg-${tierColor}`}
-                    style={{ width: `${(score / total) * 100}%` }}
-                  ></div>
-                </div>
               </div>
 
               {/* CTA Section */}
-              <div className="alert alert-success text-center mb-5">
-                <h4 className="mb-3">Ready to Take the Next Step?</h4>
+              <div className="cta-block mb-5">
+                <h3 className="mb-3">Ready to Take the Next Step?</h3>
                 <p className="mb-4">
                   Schedule a free consultation to discuss your results and
                   create a customized AI roadmap for your organization.
                 </p>
-                <a href="#contact" className="btn btn-success btn-lg">
+                <a href="#contact" className="btn btn-primary btn-lg">
+                  <i className="bi bi-calendar3 me-2"></i>
                   Book Consultation Call
                 </a>
               </div>
@@ -94,42 +121,49 @@ const ResultsPage = ({
               {/* Detailed Results */}
               <h3 className="mb-4">Detailed Assessment</h3>
 
-              {/* Filter Buttons */}
-              <div className="d-flex justify-content-center mb-4">
-                <div className="btn-group" role="group">
+              {/* Filter Tabs */}
+              <ul
+                className="nav nav-tabs justify-content-center mb-4"
+                role="tablist"
+              >
+                <li className="nav-item" role="presentation">
                   <button
-                    type="button"
-                    className={`btn ${
-                      filter === "critical"
-                        ? "btn-danger"
-                        : "btn-outline-danger"
+                    className={`nav-link ${
+                      filter === "critical" ? "active" : ""
                     }`}
                     onClick={() => handleFilterChange("critical")}
+                    role="tab"
+                    aria-selected={filter === "critical"}
+                    aria-controls="critical-tab"
                   >
-                    Critical (Red) ({criticalCount})
+                    Critical ({criticalCount})
                   </button>
+                </li>
+                <li className="nav-item" role="presentation">
                   <button
-                    type="button"
-                    className={`btn ${
-                      filter === "issues"
-                        ? "btn-warning"
-                        : "btn-outline-warning"
+                    className={`nav-link ${
+                      filter === "issues" ? "active" : ""
                     }`}
                     onClick={() => handleFilterChange("issues")}
+                    role="tab"
+                    aria-selected={filter === "issues"}
+                    aria-controls="issues-tab"
                   >
-                    Issues (Red + Yellow) ({issuesCount})
+                    Issues ({issuesCount})
                   </button>
+                </li>
+                <li className="nav-item" role="presentation">
                   <button
-                    type="button"
-                    className={`btn ${
-                      filter === "all" ? "btn-primary" : "btn-outline-primary"
-                    }`}
+                    className={`nav-link ${filter === "all" ? "active" : ""}`}
                     onClick={() => handleFilterChange("all")}
+                    role="tab"
+                    aria-selected={filter === "all"}
+                    aria-controls="all-tab"
                   >
                     All ({allCount})
                   </button>
-                </div>
-              </div>
+                </li>
+              </ul>
 
               {filteredResults.length === 0 ? (
                 <p className="text-center text-muted">
@@ -137,123 +171,124 @@ const ResultsPage = ({
                 </p>
               ) : (
                 <div className="accordion" id="resultsAccordion">
-                  {filteredResults.map((result, index) => (
-                    <div key={result.question} className="accordion-item">
-                      <h2 className="accordion-header" id={`heading${index}`}>
-                        <button
-                          className={`accordion-button collapsed ${
-                            result.score === 2
-                              ? "border-start border-success border-4"
-                              : result.score === 1
-                              ? "border-start border-warning border-4"
-                              : "border-start border-danger border-4"
-                          }`}
-                          type="button"
-                          data-bs-toggle="collapse"
-                          data-bs-target={`#collapse${index}`}
-                          aria-expanded="false"
-                          aria-controls={`collapse${index}`}
-                        >
-                          <div className="d-flex justify-content-between align-items-center w-100">
-                            <div className="flex-grow-1">
-                              <h6 className="mb-1">
-                                Question {result.question}:{" "}
-                                {result.question_text}
-                              </h6>
-                              <p className="mb-1 small text-muted">
-                                Selected:{" "}
-                                <strong>{result.selected_text}</strong>
-                              </p>
-                              <div className="d-flex align-items-center gap-2">
-                                <div
-                                  className={`badge fs-6 ${
-                                    result.score === 2
-                                      ? "bg-success"
-                                      : result.score === 1
-                                      ? "bg-warning text-dark"
-                                      : "bg-danger"
-                                  }`}
-                                >
-                                  Score: {result.score}/2
-                                </div>
+                  {filteredResults.map((result, index) => {
+                    const icon = getIconForScore(result.score);
+                    const iconClass = getColorForScore(result.score);
+                    const isExpanded = false; // Default collapsed
+
+                    return (
+                      <div key={result.question} className="accordion-item">
+                        <h2 className="accordion-header" id={`heading${index}`}>
+                          <button
+                            className={`accordion-button collapsed border-start border-4 ${
+                              result.score === 2
+                                ? "border-success"
+                                : result.score === 1
+                                ? "border-warning"
+                                : "border-danger"
+                            }`}
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target={`#collapse${index}`}
+                            aria-expanded={isExpanded}
+                            aria-controls={`collapse${index}`}
+                          >
+                            <div className="d-flex align-items-center w-100">
+                              <span className={`result-icon ${iconClass} me-3`}>
+                                {icon}
+                              </span>
+                              <div className="flex-grow-1">
+                                <h6 className="mb-1">
+                                  Question {result.question}:{" "}
+                                  {result.question_text}
+                                </h6>
+                                <p className="mb-0 small text-muted">
+                                  Your Answer:{" "}
+                                  <strong>{result.selected_text}</strong>
+                                </p>
+                              </div>
+                              <div className="ms-3">
                                 <button
                                   className="btn btn-sm btn-outline-primary"
-                                  onClick={() =>
-                                    onEditQuestion(result.question)
-                                  }
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    onEditQuestion(result.question);
+                                  }}
                                   aria-label={`Edit answer for Question ${result.question}`}
                                 >
                                   Edit
                                 </button>
                               </div>
                             </div>
+                          </button>
+                        </h2>
+                        <div
+                          id={`collapse${index}`}
+                          className="accordion-collapse collapse"
+                          aria-labelledby={`heading${index}`}
+                          data-bs-parent="#resultsAccordion"
+                        >
+                          <div className="accordion-body">
+                            {result.question_clarification && (
+                              <div className="mb-3">
+                                <h6 className="fw-bold text-secondary mb-2">
+                                  Question Context
+                                </h6>
+                                <p className="small text-muted">
+                                  {result.question_clarification}
+                                </p>
+                              </div>
+                            )}
+
+                            {result.selected_clarification && (
+                              <div className="mb-3">
+                                <h6 className="fw-bold text-secondary mb-2">
+                                  Selection Context
+                                </h6>
+                                <p className="small text-muted">
+                                  {result.selected_clarification}
+                                </p>
+                              </div>
+                            )}
+
+                            {result.explanation && (
+                              <div className="mb-3 info-box">
+                                <h6 className="fw-bold text-primary mb-2">
+                                  Advisor's Note
+                                </h6>
+                                <p className="small">{result.explanation}</p>
+                              </div>
+                            )}
                           </div>
-                        </button>
-                      </h2>
-                      <div
-                        id={`collapse${index}`}
-                        className="accordion-collapse collapse"
-                        aria-labelledby={`heading${index}`}
-                        data-bs-parent="#resultsAccordion"
-                      >
-                        <div className="accordion-body">
-                          {result.question_clarification && (
-                            <div className="mb-3">
-                              <h6 className="fw-bold text-secondary mb-2">
-                                Question Context
-                              </h6>
-                              <p className="small text-muted">
-                                {result.question_clarification}
-                              </p>
-                            </div>
-                          )}
-
-                          {result.selected_clarification && (
-                            <div className="mb-3">
-                              <h6 className="fw-bold text-secondary mb-2">
-                                Selection Context
-                              </h6>
-                              <p className="small text-muted">
-                                {result.selected_clarification}
-                              </p>
-                            </div>
-                          )}
-
-                          {result.explanation && (
-                            <div className="mb-3">
-                              <h6 className="fw-bold text-primary mb-2">
-                                Assessment
-                              </h6>
-                              <p className="small">{result.explanation}</p>
-                            </div>
-                          )}
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
 
               {/* Share Section */}
               <div className="text-center mt-5">
                 <h4 className="mb-3">Share Your Results</h4>
-                <div className="input-group mb-3">
+                <div
+                  className="input-group mb-3"
+                  style={{ maxWidth: "500px", margin: "0 auto" }}
+                >
                   <input
                     type="text"
                     className="form-control"
                     value={shareableUrl || window.location.href}
                     readOnly
+                    aria-label="Shareable results URL"
                   />
                   <button
                     className="btn btn-outline-secondary"
                     type="button"
-                    onClick={() =>
-                      navigator.clipboard.writeText(
-                        shareableUrl || window.location.href
-                      )
-                    }
+                    onClick={handleCopyToClipboard}
+                    aria-label="Copy share link"
                   >
-                    Copy Link
+                    <i className="bi bi-copy"></i> Copy Link
                   </button>
                 </div>
                 <small className="text-muted">

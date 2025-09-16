@@ -1,20 +1,24 @@
 import React from "react";
 
 const ProgressBar = ({ current, total }) => {
-  // Static placeholder - will receive props later
   const progress = Math.round((current / total) * 100);
 
   return (
-    <div className="progress mb-4" style={{ height: "12px" }}>
+    <div className="mb-4">
+      <div className="mb-2 text-center">
+        <small className="text-muted">
+          Question {current} of {total}
+        </small>
+      </div>
       <div
-        className="progress-bar d-flex align-items-center px-2"
+        className="progress"
         role="progressbar"
-        style={{ width: `${progress}%` }}
         aria-valuenow={progress}
         aria-valuemin="0"
         aria-valuemax="100"
+        aria-label={`Progress: ${progress}% complete`}
       >
-        Question {current} of {total}
+        <div className="progress-bar" style={{ width: `${progress}%` }}></div>
       </div>
     </div>
   );

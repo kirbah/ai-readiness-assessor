@@ -211,8 +211,8 @@ function App() {
           onEditQuestion={goToQuestion}
           onRestart={handleRestart}
         />
-        <footer className="bg-light py-3 mt-auto">
-          <div className="container text-center">
+        <footer className="text-center py-4 mt-5">
+          <div className="container">
             <p className="mb-0 text-muted">
               &copy; 2025 AI Readiness Assessor.{" "}
               <a
@@ -222,6 +222,7 @@ function App() {
               >
                 Kiryl Bahdanau
               </a>
+              . All Rights Reserved.
             </p>
           </div>
         </footer>
@@ -237,7 +238,7 @@ function App() {
         <div className="container">
           {urlError && (
             <div
-              className="alert alert-warning alert-dismissible fade show"
+              className="alert alert-danger alert-dismissible fade show mb-4"
               role="alert"
             >
               {urlError}
@@ -249,7 +250,7 @@ function App() {
             </div>
           )}
           <div className="text-center mb-5">
-            <h1 className="display-4 fw-bold text-primary mb-3">
+            <h1 className="h1 fw-bold text-primary mb-3">
               AI Readiness Assessment
             </h1>
             <p className="lead text-muted">
@@ -270,14 +271,12 @@ function App() {
               onPrevious={handlePrevious}
               showPrevious={currentQuestionIndex > 0}
               userAnswer={userAnswers[currentQuestion.id]}
-              isEditMode={editMode}
-              onEditQuestion={goToQuestion}
             />
           </>
         </div>
       </div>
-      <footer className="bg-light py-3 mt-auto">
-        <div className="container text-center">
+      <footer className="text-center py-4 mt-5">
+        <div className="container">
           <p className="mb-0 text-muted">
             &copy; 2025 AI Readiness Assessor.{" "}
             <a
@@ -287,6 +286,7 @@ function App() {
             >
               Kiryl Bahdanau
             </a>
+            . All Rights Reserved.
           </p>
         </div>
       </footer>
