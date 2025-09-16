@@ -65,10 +65,10 @@ const ResultsPage = ({
             <div className="card-body p-4">
               {/* Score Summary */}
               <div className="text-center mb-5">
-                <div className="display-4 fw-bold text-{tierColor} mb-3">
+                <div className={`display-4 fw-bold text-${tierColor} mb-3`}>
                   {score}/{total}
                 </div>
-                <h2 className="text-{tierColor} mb-1">{tier}</h2>
+                <h2 className={`text-${tierColor} mb-1`}>{tier}</h2>
                 <p className="lead text-muted">{tierDescriptions[tier]}</p>
 
                 <div className="progress mt-4" style={{ height: "20px" }}>

@@ -176,25 +176,41 @@ function App() {
     }?${shareUrlParams.toString()}`;
 
     return (
-      <ResultsPage
-        score={score}
-        total={20}
-        tier={tier}
-        results={results}
-        shareableUrl={shareableUrl}
-        initialFilter={currentFilter}
-        onFilterChange={setCurrentFilter}
-        onEditQuestion={goToQuestion}
-        onRestart={handleRestart}
-      />
+      <>
+        <ResultsPage
+          score={score}
+          total={20}
+          tier={tier}
+          results={results}
+          shareableUrl={shareableUrl}
+          initialFilter={currentFilter}
+          onFilterChange={setCurrentFilter}
+          onEditQuestion={goToQuestion}
+          onRestart={handleRestart}
+        />
+        <footer className="bg-light py-3 mt-auto">
+          <div className="container text-center">
+            <p className="mb-0 text-muted">
+              &copy; 2025 AI Readiness Assessor.{" "}
+              <a
+                href="https://www.linkedin.com/in/kiryl-bahdanau/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Kiryl Bahdanau
+              </a>
+            </p>
+          </div>
+        </footer>
+      </>
     );
   }
 
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <div className="App">
-      <div className="container-fluid py-4">
+    <div className="App d-flex flex-column min-vh-100">
+      <div className="container-fluid py-4 flex-grow-1">
         <div className="container">
           <div className="text-center mb-5">
             <h1 className="display-4 fw-bold text-primary mb-3">
@@ -224,6 +240,20 @@ function App() {
           </>
         </div>
       </div>
+      <footer className="bg-light py-3 mt-auto">
+        <div className="container text-center">
+          <p className="mb-0 text-muted">
+            &copy; 2025 AI Readiness Assessor.{" "}
+            <a
+              href="https://www.linkedin.com/in/kiryl-bahdanau/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Kiryl Bahdanau
+            </a>
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
