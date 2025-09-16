@@ -1,0 +1,282 @@
+[
+  {
+    "id": 1,
+    "question_text": "Is your data architecture designed for analytical query (looking at the past) or predictive modeling (training the future)?",
+    "question_clarification": "Analytical systems (e.g., data warehouses) are optimized for reporting on known data, while AI/ML systems require architectures optimized for iteration, experimentation, and processing unstructured data.",
+    "answers": [
+      {
+        "id": "1a",
+        "answer_text": "Optimized for Predictive Modeling",
+        "answer_clarification": "We have a modern data stack (e.g., data lakehouse) and can easily access and process data for ML training.",
+        "score": 2,
+        "explanation": "This is an ideal state. Your architecture is a strategic asset that enables, rather than hinders, AI development."
+      },
+      {
+        "id": "1b",
+        "answer_text": "Optimized for Analytics / Reporting",
+        "answer_clarification": "Our architecture is primarily a traditional data warehouse designed for business intelligence and reporting.",
+        "score": 1,
+        "explanation": "This is common but carries risk. While you have structured data, you will likely face significant challenges and delays when trying to use this architecture for iterative ML model development."
+      },
+      {
+        "id": "1c",
+        "answer_text": "Ad-hoc / Not Formally Designed",
+        "answer_clarification": "Our data is spread across various production databases and files with no central analytical system.",
+        "score": 0,
+        "explanation": "This is a critical risk. Without a foundational data architecture, any AI project will be built on a crumbling foundation, leading to significant delays, costs, and a high likelihood of failure."
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "question_text": "Where does your most valuable data live?",
+    "question_clarification": "The 'Data Gravity' problem. The more silos you have, the higher the cost and complexity of any AI initiative.",
+    "answers": [
+      {
+        "id": "2a",
+        "answer_text": "Consolidated and Accessible",
+        "answer_clarification": "Our key data is in a central, well-documented repository.",
+        "score": 2,
+        "explanation": "Excellent. Easy access to high-quality, centralized data is a massive accelerator for any AI project."
+      },
+      {
+        "id": "2b",
+        "answer_text": "Partially Siloed",
+        "answer_clarification": "We have a central repository, but many important datasets still live in separate, hard-to-access systems.",
+        "score": 1,
+        "explanation": "This is a manageable but significant challenge. Your initial AI projects will need to budget extra time and resources for data integration and wrangling."
+      },
+      {
+        "id": "2c",
+        "answer_text": "Highly Siloed",
+        "answer_clarification": "Our data is trapped in dozens of legacy applications, spreadsheets, and departmental databases.",
+        "score": 0,
+        "explanation": "This is a major roadblock. The cost and political capital required to integrate this data will likely be far greater than the cost of the AI model itself. This problem must be solved first."
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "question_text": "Who is the single, accountable owner for data quality and governance?",
+    "question_clarification": "If everyone is responsible, no one is responsible. A lack of clear ownership is a red flag for a weak data culture.",
+    "answers": [
+      {
+        "id": "3a",
+        "answer_text": "A Senior Leader with Authority",
+        "answer_clarification": "We have a Head of Data or equivalent senior role with the power to enforce standards.",
+        "score": 2,
+        "explanation": "This is the gold standard. It signals that your organization treats data as a strategic asset and has the leadership to manage it effectively."
+      },
+      {
+        "id": "3b",
+        "answer_text": "A Junior Committee or Team",
+        "answer_clarification": "We have a committee, but it lacks the executive authority to enforce its decisions across the organization.",
+        "score": 1,
+        "explanation": "This is a common but flawed model. Without executive backing, data governance initiatives often fail when they conflict with departmental priorities."
+      },
+      {
+        "id": "3c",
+        "answer_text": "No Clear Owner",
+        "answer_clarification": "Data quality is handled on a project-by-project basis with no central oversight.",
+        "score": 0,
+        "explanation": "This is a critical weakness. A lack of data ownership inevitably leads to inconsistent, untrustworthy data, which is poison for any serious AI initiative."
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "question_text": "Have you honestly assessed the gap between your current team's skills and the skills required for enterprise AI?",
+    "question_clarification": "The skills needed to build a demo in a notebook are very different from those needed to deploy and maintain a production AI system (e.g., MLOps, data engineering, security).",
+    "answers": [
+      {
+        "id": "4a",
+        "answer_text": "Yes, and We Have a Plan",
+        "answer_clarification": "We have a clear map of our skill gaps and an active plan for hiring and upskilling.",
+        "score": 2,
+        "explanation": "Excellent. A realistic understanding of your team's capabilities is a sign of a mature technology organization."
+      },
+      {
+        "id": "4b",
+        "answer_text": "We Are Aware of Gaps, But No Formal Plan",
+        "answer_clarification": "We know we have gaps, especially in areas like MLOps, but haven't formalized a plan to address them.",
+        "score": 1,
+        "explanation": "This is a risk. Without a formal plan, you are likely to underestimate the time and resources needed to bridge these gaps, leading to project delays."
+      },
+      {
+        "id": "4c",
+        "answer_text": "We Believe Our Current Team is Sufficient",
+        "answer_clarification": "We assume our existing smart engineers can handle the new challenges as they arise.",
+        "score": 0,
+        "explanation": "This is a dangerous assumption. Enterprise AI requires specialized, hard-won experience. Overlooking this often leads to projects that work in development but fail in production."
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "question_text": "Are your data scientists and engineers isolated in a 'Center of Excellence' or embedded with business units?",
+    "question_clarification": "Technical teams that are disconnected from the day-to-day realities of the business are more likely to work on interesting technical problems than important business problems.",
+    "answers": [
+      {
+        "id": "5a",
+        "answer_text": "Embedded with Business Units",
+        "answer_clarification": "Our technical teams work as partners directly with the business units they serve.",
+        "score": 2,
+        "explanation": "This is a strong indicator of success. Embedded teams have the context and relationships needed to ensure the solutions they build solve real-world problems and get adopted."
+      },
+      {
+        "id": "5b",
+        "answer_text": "A Hybrid Model",
+        "answer_clarification": "We have a central data team, but they are assigned to work closely with specific business units on a project basis.",
+        "score": 1,
+        "explanation": "This model can work, but requires strong project management and communication to prevent a disconnect between the technical team and business stakeholders."
+      },
+      {
+        "id": "5c",
+        "answer_text": "Isolated in a Central R&D/IT Team",
+        "answer_clarification": "Our data science team is a separate 'Center of Excellence' that takes on projects from various departments.",
+        "score": 0,
+        "explanation": "This model is prone to failure. The isolation from business context often leads to technically impressive solutions that solve the wrong problem or are never adopted by the business users."
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "question_text": "How are your technical teams incentivized?",
+    "question_clarification": "Incentives drive behavior. If your system rewards technical complexity over business value, you will get complex systems that don't deliver value.",
+    "answers": [
+      {
+        "id": "6a",
+        "answer_text": "Based on Business Impact",
+        "answer_clarification": "Performance is measured by the business value their projects deliver (e.g., cost savings, revenue growth).",
+        "score": 2,
+        "explanation": "Ideal. This aligns the technical team's goals directly with the company's goals, ensuring they are always focused on delivering real-world value."
+      },
+      {
+        "id": "6b",
+        "answer_text": "Based on Project Completion",
+        "answer_clarification": "Performance is measured by finishing projects on time and on budget, regardless of their ultimate business impact.",
+        "score": 1,
+        "explanation": "This is a common but problematic incentive structure. It can lead to teams shipping features that meet requirements but don't actually move the needle for the business."
+      },
+      {
+        "id": "6c",
+        "answer_text": "Based on Technical Novelty (Implicitly)",
+        "answer_clarification": "Our culture implicitly rewards and promotes engineers who use the latest, most impressive technology.",
+        "score": 0,
+        "explanation": "This is the 'Shiny Object' trap. It creates a system where engineers are incentivized to build their resumes on your dime, prioritizing technical novelty over business results."
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "question_text": "How will you validate the outputs of a non-deterministic AI model?",
+    "question_clarification": "Unlike traditional software, you can't write a simple unit test to know if an LLM's answer is 'correct.' You need a new class of validation processes.",
+    "answers": [
+      {
+        "id": "7a",
+        "answer_text": "We Have a Defined Validation Process",
+        "answer_clarification": "We have a process involving human-in-the-loop review, golden datasets, and performance monitoring.",
+        "score": 2,
+        "explanation": "Excellent. This demonstrates a mature understanding of the unique challenges of managing AI in production."
+      },
+      {
+        "id": "7b",
+        "answer_text": "We Will Rely on Standard QA",
+        "answer_clarification": "Our existing QA team will test the model's outputs as they would any other software.",
+        "score": 1,
+        "explanation": "This is a significant risk. Traditional QA processes are not equipped to handle the non-deterministic and emergent nature of modern AI models, which can lead to unforeseen failures."
+      },
+      {
+        "id": "7c",
+        "answer_text": "We Have Not Defined a Process",
+        "answer_clarification": "We assume the model will be accurate enough and will handle exceptions as they arise.",
+        "score": 0,
+        "explanation": "This is a critical oversight. 'Handling exceptions as they arise' in a live AI system can mean dealing with significant reputational, financial, or legal damage."
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "question_text": "What is your 'circuit breaker' if a live model begins to produce harmful or biased outputs?",
+    "question_clarification": "When an AI model goes wrong, it can go wrong at a massive scale, very quickly. You need an automated way to shut it down.",
+    "answers": [
+      {
+        "id": "8a",
+        "answer_text": "An Automated 'Circuit Breaker'",
+        "answer_clarification": "We have an automated monitoring system that can detect anomalies and instantly revert the system to a safe, default state.",
+        "score": 2,
+        "explanation": "This is best practice for responsible AI engineering. It shows you are prepared for the inevitable failures of complex systems."
+      },
+      {
+        "id": "8b",
+        "answer_text": "A Manual Rollback Process",
+        "answer_clarification": "Our on-call engineer would be paged and would manually roll back the deployment.",
+        "score": 1,
+        "explanation": "This is better than nothing, but a manual process may be too slow to prevent significant damage if a model begins to fail at scale."
+      },
+      {
+        "id": "8c",
+        "answer_text": "We Have No Formal Process",
+        "answer_clarification": "We would figure it out when it happens.",
+        "score": 0,
+        "explanation": "This is an unacceptable risk for any mission-critical system. A lack of a formal safety switch is a sign of profound unreadiness for enterprise AI."
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "question_text": "How, precisely, will you measure the ROI of this project?",
+    "question_clarification": "You must be able to connect your AI investment to a core business metric. 'Model accuracy' is not a business metric.",
+    "answers": [
+      {
+        "id": "9a",
+        "answer_text": "Tied to a Core Business KPI",
+        "answer_clarification": "The project's success is measured by its direct impact on a key metric like customer churn, profit margin, or production uptime.",
+        "score": 2,
+        "explanation": "Perfect. This ensures your project is aligned with the goals of the business and that its value can be clearly communicated to the C-suite."
+      },
+      {
+        "id": "9b",
+        "answer_text": "Measured by Technical or Proxy Metrics",
+        "answer_clarification": "We will measure success based on model accuracy, user engagement, or other technical performance indicators.",
+        "score": 1,
+        "explanation": "This is a common trap. While technical metrics are important, they are not a substitute for business ROI. A model can be 99% accurate and still provide zero business value."
+      },
+      {
+        "id": "9c",
+        "answer_text": "ROI Has Not Been Defined",
+        "answer_clarification": "We are treating this as an experimental project to see what the technology can do.",
+        "score": 0,
+        "explanation": "While experimentation is important, a project without a defined business outcome is a 'science project,' not a business investment. It is highly likely to have its funding cut."
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "question_text": "Who are the key stakeholders who could silently kill this project?",
+    "question_clarification": "AI projects don't just change software; they change workflows and power structures. The biggest threats often come from internal political resistance, not technical challenges.",
+    "answers": [
+      {
+        "id": "10a",
+        "answer_text": "We Have Identified and Aligned Them",
+        "answer_clarification": "We have a map of our key stakeholders and a proactive plan to ensure they are partners in this process.",
+        "score": 2,
+        "explanation": "This is a sign of exceptional strategic maturity. Understanding and managing the political landscape is often more critical than managing the technology."
+      },
+      {
+        "id": "10b",
+        "answer_text": "We Are Aware of Potential Resistance",
+        "answer_clarification": "We know some teams or leaders may be resistant, but we don't have a formal plan to manage it.",
+        "score": 1,
+        "explanation": "Awareness is the first step, but it is not enough. Without a proactive plan for stakeholder management, you risk being blindsided by internal resistance late in the project lifecycle."
+      },
+      {
+        "id": "10c",
+        "answer_text": "We Are Focused Only on the Technology",
+        "answer_clarification": "We believe that if we build a good enough tool, people will naturally adopt it.",
+        "score": 0,
+        "explanation": "This is a dangerously naive assumption in any large enterprise. Failure to manage the human and political elements of a technology change is a primary reason why technically successful projects ultimately fail to be adopted."
+      }
+    ]
+  }
+]
