@@ -279,7 +279,7 @@ const ResultsPage = ({
                 >
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control readonly-url-input"
                     value={shareableUrl || window.location.href}
                     readOnly
                     aria-label="Shareable results URL"

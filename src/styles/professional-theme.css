@@ -351,6 +351,21 @@ h4 {
   border-left: none;
 }
 
+/* Read-only URL Input */
+.readonly-url-input {
+  background-color: #f8f9fa;
+  border-color: #e9ecef;
+  color: #495057;
+  cursor: text;
+}
+
+.readonly-url-input:focus {
+  outline: none;
+  border-color: #e9ecef;
+  box-shadow: none;
+  background-color: #f8f9fa;
+}
+
 /* Footer */
 footer {
   background-color: var(--bs-light) !important;
