@@ -40,11 +40,6 @@ const QuestionCard = ({
                   <small className="text-muted">
                     {answer.answer_clarification || "No additional details"}
                   </small>
-                  {isSelected && (
-                    <span className="badge bg-success mt-2 align-self-start">
-                      Selected
-                    </span>
-                  )}
                 </div>
               </button>
             );
