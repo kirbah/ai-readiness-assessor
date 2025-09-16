@@ -1,70 +1,37 @@
-# Getting Started with Create React App
+# The AI Readiness Assessor
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Live Application:** [https://kirbah.github.io/ai-readiness-assessor/](https://kirbah.github.io/ai-readiness-assessor/)
 
-## Available Scripts
+[![CI/CD Status](https://github.com/kirbah/ai-readiness-assessor/actions/workflows/deploy.yml/badge.svg)](https://github.com/kirbah/ai-readiness-assessor/actions)
 
-In the project directory, you can run:
+---
 
-### `npm start`
+### **The Problem**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Most AI projects fail not because of the technology, but because of the gap between a C-suite goal and the on-the-ground reality of the teams, data, and systems expected to deliver it. Technology leaders need a way to quickly diagnose hidden risks before they become multi-million-dollar failures.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### **The Solution**
 
-### `npm test`
+This application is a free, interactive diagnostic tool for CTOs, VPs of Engineering, and other technology leaders. It's designed to provide an immediate, data-driven snapshot of an organization's readiness to adopt enterprise AI.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The purpose of this tool is to:
 
-### `npm run build`
+- **Provide Immediate Clarity:** Offer tangible, personalized feedback on an organization's strengths and critical gaps.
+- **De-Risk Decision Making:** Help leaders identify unseen risks in their data, strategy, and team readiness.
+- **Serve as a Bridge to Strategy:** Act as the starting point for a deeper, strategic conversation about turning AI ambition into an executable, low-risk reality.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### **Key Features for Leaders**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Strategic Self-Assessment:** A curated questionnaire that evaluates the core pillars of enterprise AI readiness.
+- **Instantaneous, Shareable Reports:** Receive a detailed report with a readiness score, a strategic tier, and color-coded insights that can be shared with team members.
+- **Data-Driven Conversation Starter:** The results page generates a unique URL, enabling a highly focused follow-up discussion based on concrete data.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### **Technology**
 
-### `npm run eject`
+This is a modern, reliable, and secure client-side application built with **React** and **Bootstrap 5**, deployed via GitHub Actions.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+**Developed by Kiryl Bahdanau**
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **LinkedIn:** [linkedin.com/in/kiryl-bahdanau/](https://www.linkedin.com/in/kiryl-bahdanau/)
