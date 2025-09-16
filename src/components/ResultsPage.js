@@ -209,19 +209,6 @@ const ResultsPage = ({
                                   <strong>{result.selected_text}</strong>
                                 </p>
                               </div>
-                              <div className="ms-4">
-                                <button
-                                  className="btn btn-sm btn-outline-primary"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    e.preventDefault();
-                                    onEditQuestion(result.question);
-                                  }}
-                                  aria-label={`Edit answer for Question ${result.question}`}
-                                >
-                                  Edit
-                                </button>
-                              </div>
                             </div>
                           </button>
                         </h2>
@@ -262,6 +249,16 @@ const ResultsPage = ({
                                 <p className="small">{result.explanation}</p>
                               </div>
                             )}
+
+                            <div className="text-end mt-3">
+                              <button
+                                className="btn btn-outline-primary"
+                                onClick={() => onEditQuestion(result.question)}
+                                aria-label={`Change answer for Question ${result.question}`}
+                              >
+                                Change My Answer
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
