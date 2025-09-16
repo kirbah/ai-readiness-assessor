@@ -107,9 +107,6 @@ const ResultsPage = ({
                               Score: {result.score}/2
                             </div>
                           </div>
-                          <div className="flex-shrink-0 ms-2">
-                            <span className="accordion-button-icon">+</span>
-                          </div>
                         </div>
                       </button>
                     </h2>
