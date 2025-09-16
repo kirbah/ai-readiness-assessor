@@ -144,8 +144,10 @@ h4 {
 }
 
 .answer-row .form-check-input {
-  margin-top: 0.125rem;
-  margin-left: 0;
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
 .answer-row .form-check-input:checked {
@@ -154,7 +156,7 @@ h4 {
 }
 
 .answer-row .form-check-label {
-  margin-left: 0.75rem;
+  margin-left: 0;
   cursor: pointer;
   font-size: 1rem;
   line-height: 1.5;

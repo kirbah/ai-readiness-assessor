@@ -207,7 +207,7 @@ const ResultsPage = ({
                                   <strong>{result.selected_text}</strong>
                                 </p>
                               </div>
-                              <div className="ms-3">
+                              <div className="ms-4">
                                 <button
                                   className="btn btn-sm btn-outline-primary"
                                   onClick={(e) => {

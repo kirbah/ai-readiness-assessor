@@ -13,14 +13,14 @@ const QuestionCard = ({
   return (
     <div className="card question-card mb-4">
       <div className="card-body">
-        <h2 className="h4 mb-4 fw-bold">{question.question_text}</h2>
+        <h2 className="h4 mb-3 fw-bold">{question.question_text}</h2>
         {question.question_clarification && (
-          <div className="info-box mb-4" role="note">
+          <div className="info-box mb-3" role="note">
             <small>{question.question_clarification}</small>
           </div>
         )}
 
-        <ul className="list-unstyled mb-4">
+        <ul className="list-unstyled mb-3">
           {question.answers.map((answer) => {
             const isSelected = userAnswer === answer.id;
             const answerText = (
