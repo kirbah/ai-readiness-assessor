@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 const QuestionCard = ({
   question,
@@ -9,7 +9,6 @@ const QuestionCard = ({
   userAnswer,
 }) => {
   const isAnswered = !!userAnswer;
-  const [expandedAnswer, setExpandedAnswer] = useState(null);
 
   return (
     <div className="card shadow-sm mb-4">
@@ -25,64 +24,32 @@ const QuestionCard = ({
           {question.answers.map((answer) => {
             const isSelected = userAnswer === answer.id;
             const buttonClass = isSelected
-              ? "btn-primary"
-              : "btn-outline-primary";
+              ? "btn btn-primary w-100 mb-2 text-start"
+              : "btn btn-outline-primary w-100 mb-2 text-start";
 
             return (
-              <>
-                <button
-                  key={`${answer.id}-btn`}
-                  className={`btn ${buttonClass} w-100 mb-2 text-start`}
-                  onClick={() => onAnswerSelect(answer.id)}
-                  onMouseEnter={() => setExpandedAnswer(answer.id)}
-                  onMouseLeave={() => setExpandedAnswer(null)}
-                  onTouchStart={() => setExpandedAnswer(answer.id)}
-                  onTouchEnd={() => {
-                    // Delay clearing to allow seeing the panel briefly
-                    setTimeout(() => setExpandedAnswer(null), 2000);
-                  }}
-                >
-                  <div className="d-flex justify-content-between align-items-center">
-                    <span>{answer.answer_text}</span>
-                    {isSelected && (
-                      <span className="badge bg-success me-2">Selected</span>
-                    )}
-                  </div>
-                </button>
-                {expandedAnswer === answer.id && (
-                  <div
-                    className="mb-2 p-3 bg-light rounded shadow-sm border-start border-primary border-3"
-                    role="note"
-                  >
-                    <small className="text-muted">
-                      <i className="bi bi-info-circle me-1"></i>
-                      {answer.answer_clarification}
-                    </small>
-                  </div>
-                )}
-              </>
+              <button
+                key={answer.id}
+                className={buttonClass}
+                onClick={() => onAnswerSelect(answer.id)}
+              >
+                <div className="d-flex flex-column text-start">
+                  <span className={isSelected ? "fw-bold mb-1" : "mb-1"}>
+                    {answer.answer_text}
+                  </span>
+                  <small className="text-muted">
+                    {answer.answer_clarification || "No additional details"}
+                  </small>
+                  {isSelected && (
+                    <span className="badge bg-success mt-2 align-self-start">
+                      Selected
+                    </span>
+                  )}
+                </div>
+              </button>
             );
           })}
         </div>
-
-        {isAnswered && (
-          <div
-            className="alert alert-light border-start border-primary border-3 mb-3 ps-3"
-            role="note"
-          >
-            <small className="text-muted">
-              <strong>Why this choice?</strong>{" "}
-              {(() => {
-                const selectedAnswer = question.answers.find(
-                  (a) => a.id === userAnswer
-                );
-                return selectedAnswer
-                  ? selectedAnswer.answer_clarification
-                  : "";
-              })()}
-            </small>
-          </div>
-        )}
 
         <div className="d-flex justify-content-between">
           {showPrevious && (
