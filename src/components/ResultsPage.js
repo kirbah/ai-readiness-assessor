@@ -243,7 +243,10 @@ const ResultsPage = ({
 
                             {result.explanation && (
                               <div className="mb-3 info-box">
-                                <h6 className="fw-bold text-primary mb-2">
+                                <h6
+                                  className="fw-bold mb-2"
+                                  style={{ color: "#3a5f7f" }}
+                                >
                                   Advisor's Note
                                 </h6>
                                 <p className="small">{result.explanation}</p>
