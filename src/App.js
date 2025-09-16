@@ -4,6 +4,7 @@ import ProgressBar from "./components/ProgressBar";
 import QuestionCard from "./components/QuestionCard";
 import ResultsPage from "./components/ResultsPage";
 import "./App.css";
+import "./styles/professional-theme.css";
 
 function App() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -250,9 +251,7 @@ function App() {
             </div>
           )}
           <div className="text-center mb-5">
-            <h1 className="h1 fw-bold text-primary mb-3">
-              AI Readiness Assessment
-            </h1>
+            <h1 className="h1 fw-bold mb-3">AI Readiness Assessment</h1>
             <p className="lead text-muted">
               Evaluate your organization's readiness for enterprise AI adoption
             </p>
