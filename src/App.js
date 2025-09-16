@@ -11,6 +11,7 @@ function App() {
   const [showResults, setShowResults] = useState(false);
   const [currentFilter, setCurrentFilter] = useState("all");
   const [editMode, setEditMode] = useState(false);
+  const [urlError, setUrlError] = useState(null);
 
   const questions = useMemo(() => questionsData, []);
   const questionsById = useMemo(() => {
@@ -133,6 +134,28 @@ function App() {
     if (hasValidAnswers && Object.keys(urlAnswers).length === totalQuestions) {
       setUserAnswers(urlAnswers);
       setShowResults(true);
+      setUrlError(null);
+    } else if (
+      Object.keys(urlAnswers).length > 0 &&
+      Object.keys(urlAnswers).length < totalQuestions
+    ) {
+      setUrlError(
+        "The assessment link is incomplete. Starting from the first unanswered question."
+      );
+      const firstUnansweredIndex = Math.min(
+        ...Object.keys(urlAnswers).map(Number)
+      );
+      setUserAnswers(urlAnswers);
+      setCurrentQuestionIndex(firstUnansweredIndex);
+    } else if (hasValidAnswers) {
+      setUrlError(
+        "The assessment link contains invalid data. Starting a new evaluation."
+      );
+      setUserAnswers({});
+      setCurrentQuestionIndex(0);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else {
+      setUrlError(null);
     }
 
     // Parse filter from URL
@@ -212,6 +235,19 @@ function App() {
     <div className="App d-flex flex-column min-vh-100">
       <div className="container-fluid py-4 flex-grow-1">
         <div className="container">
+          {urlError && (
+            <div
+              className="alert alert-warning alert-dismissible fade show"
+              role="alert"
+            >
+              {urlError}
+              <button
+                type="button"
+                className="btn-close"
+                onClick={() => setUrlError(null)}
+              ></button>
+            </div>
+          )}
           <div className="text-center mb-5">
             <h1 className="display-4 fw-bold text-primary mb-3">
               AI Readiness Assessment
