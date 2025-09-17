@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { animate, motion, AnimatePresence } from "framer-motion";
 import ReactGA from "react-ga4";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
@@ -43,6 +44,7 @@ const ResultsPage: React.FC<Props> = ({
 }) => {
   const [filter, setFilter] = useState<string>(initialFilter || "all");
   const [isCopied, setIsCopied] = useState(false);
+  const [animatedScore, setAnimatedScore] = useState(0);
 
   const tierDescriptions = {
     "At Risk":
@@ -59,6 +61,18 @@ const ResultsPage: React.FC<Props> = ({
       : tier === "Building Foundation"
         ? "warning"
         : "danger";
+
+  useEffect(() => {
+    const controls = animate(0, score, {
+      duration: 1.5,
+      ease: "easeOut",
+      onUpdate: (latest) => {
+        setAnimatedScore(Math.round(latest));
+      },
+    });
+
+    return () => controls.stop();
+  }, [score]);
 
   // Calculate counts for filters
   const criticalCount = results.filter((r) => r.score === 0).length;
@@ -118,9 +132,9 @@ const ResultsPage: React.FC<Props> = ({
               <div className="text-center mb-5">
                 <div className="mb-4">
                   <CircularProgressbar
-                    value={score}
+                    value={animatedScore}
                     maxValue={total}
-                    text={`${score}/${total}`}
+                    text={`${animatedScore}/${total}`}
                     styles={buildStyles({
                       pathColor: `var(--bs-primary)`,
                       textColor: `var(--bs-primary)`,
@@ -211,92 +225,118 @@ const ResultsPage: React.FC<Props> = ({
                 </p>
               ) : (
                 <div className="accordion" id="resultsAccordion">
-                  {filteredResults.map((result, index) => {
-                    const styles = scoreStyles[result.score] || scoreStyles[2];
-                    const icon = styles.icon;
-                    const iconClass = styles.color;
-                    const isExpanded = false; // Default collapsed
+                  <AnimatePresence mode="popLayout">
+                    {filteredResults.map((result, index) => {
+                      const styles =
+                        scoreStyles[result.score] || scoreStyles[2];
+                      const icon = styles.icon;
+                      const iconClass = styles.color;
+                      const isExpanded = false; // Default collapsed
 
-                    return (
-                      <div key={result.question} className="accordion-item">
-                        <h2 className="accordion-header" id={`heading${index}`}>
-                          <button
-                            className={`accordion-button collapsed border-start border-4 ${styles.borderClass}`}
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target={`#collapse${index}`}
-                            aria-expanded={isExpanded}
-                            aria-controls={`collapse${index}`}
-                          >
-                            <div className="d-flex align-items-center w-100">
-                              <span className={`result-icon ${iconClass} me-3`}>
-                                {icon}
-                              </span>
-                              <div className="flex-grow-1">
-                                <h6 className="mb-1">
-                                  Question {result.question}:{" "}
-                                  {result.question_text}
-                                </h6>
-                                <p className="mb-0 small text-muted">
-                                  Your Answer:{" "}
-                                  <strong>{result.selected_text}</strong>
-                                </p>
-                              </div>
-                            </div>
-                          </button>
-                        </h2>
-                        <div
-                          id={`collapse${index}`}
-                          className="accordion-collapse collapse"
-                          aria-labelledby={`heading${index}`}
-                          data-bs-parent="#resultsAccordion"
+                      return (
+                        <motion.div
+                          key={result.question}
+                          layout
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -20 }}
+                          transition={{ duration: 0.3 }}
+                          className="accordion-item"
                         >
-                          <div className="accordion-body">
-                            {result.question_clarification && (
-                              <div className="mb-3">
-                                <h6 className="fw-bold text-secondary mb-2">
-                                  Question Context
-                                </h6>
-                                <p className="small text-muted">
-                                  {result.question_clarification}
-                                </p>
+                          <h2
+                            className="accordion-header"
+                            id={`heading${index}`}
+                          >
+                            <button
+                              className={`accordion-button collapsed border-start border-4 ${styles.borderClass}`}
+                              type="button"
+                              data-bs-toggle="collapse"
+                              data-bs-target={`#collapse${index}`}
+                              aria-expanded={isExpanded}
+                              aria-controls={`collapse${index}`}
+                            >
+                              <div className="d-flex align-items-center w-100">
+                                <span
+                                  className={`result-icon ${iconClass} me-3`}
+                                >
+                                  {icon}
+                                </span>
+                                <div className="flex-grow-1">
+                                  <h6 className="mb-1">
+                                    Question {result.question}:{" "}
+                                    {result.question_text}
+                                  </h6>
+                                  <p className="mb-0 small text-muted">
+                                    Your Answer:{" "}
+                                    <strong>{result.selected_text}</strong>
+                                  </p>
+                                </div>
                               </div>
-                            )}
-
-                            {result.selected_clarification && (
-                              <div className="mb-3">
-                                <h6 className="fw-bold text-secondary mb-2">
-                                  Selection Context
-                                </h6>
-                                <p className="small text-muted">
-                                  {result.selected_clarification}
-                                </p>
-                              </div>
-                            )}
-
-                            {result.explanation && (
-                              <div className="mb-3 info-box">
-                                <h6 className="fw-bold mb-2 advisors-note-color">
-                                  Advisor&apos;s Note
-                                </h6>
-                                <p className="small">{result.explanation}</p>
-                              </div>
-                            )}
-
-                            <div className="text-end mt-3">
-                              <button
-                                className="btn btn-outline-primary"
-                                onClick={() => onEditQuestion(result.question)}
-                                aria-label={`Change answer for Question ${result.question}`}
+                            </button>
+                          </h2>
+                          <div
+                            id={`collapse${index}`}
+                            className="accordion-collapse collapse"
+                            aria-labelledby={`heading${index}`}
+                            data-bs-parent="#resultsAccordion"
+                          >
+                            <div className="accordion-body">
+                              <motion.div
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, ease: "easeOut" }}
                               >
-                                Change My Answer
-                              </button>
+                                {result.question_clarification && (
+                                  <div className="mb-3">
+                                    <h6 className="fw-bold text-secondary mb-2">
+                                      Question Context
+                                    </h6>
+                                    <p className="small text-muted">
+                                      {result.question_clarification}
+                                    </p>
+                                  </div>
+                                )}
+
+                                {result.selected_clarification && (
+                                  <div className="mb-3">
+                                    <h6 className="fw-bold text-secondary mb-2">
+                                      Selection Context
+                                    </h6>
+                                    <p className="small text-muted">
+                                      {result.selected_clarification}
+                                    </p>
+                                  </div>
+                                )}
+
+                                {result.explanation && (
+                                  <div className="mb-3 info-box">
+                                    <h6 className="fw-bold mb-2 advisors-note-color">
+                                      Advisor's Note
+                                    </h6>
+                                    <p className="small">
+                                      {result.explanation}
+                                    </p>
+                                  </div>
+                                )}
+
+                                <div className="text-end mt-3">
+                                  <button
+                                    className="btn btn-outline-primary"
+                                    onClick={() =>
+                                      onEditQuestion(result.question)
+                                    }
+                                    aria-label={`Change answer for Question ${result.question}`}
+                                  >
+                                    Change My Answer
+                                  </button>
+                                </div>
+                              </motion.div>
                             </div>
                           </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                        </motion.div>
+                      );
+                    })}
+                  </AnimatePresence>
                 </div>
               )}
 
