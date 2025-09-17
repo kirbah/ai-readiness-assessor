@@ -86,9 +86,9 @@ const ResultsPage = ({
     : "https://calendly.com/kiryl-bahdanau/ai-readiness";
 
   return (
-    <div className="container mt-5">
+    <div className="mt-5">
       <div className="row justify-content-center">
-        <div className="col-lg-10">
+        <div className="col-lg-12">
           <div className="card">
             <div className="card-header text-center">
               <h1 className="h3 mb-0">Your AI Readiness Report</h1>

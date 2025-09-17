@@ -217,6 +217,12 @@ function App() {
     }
   }, [questions, questionsById, totalQuestions]);
 
+  useEffect(() => {
+    if (showResults) {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }
+  }, [showResults]);
+
   if (showResults) {
     const score = calculateScore();
     const tier = getTier(score);
@@ -251,18 +257,20 @@ function App() {
     }?${shareUrlParams.toString()}`;
 
     return (
-      <>
-        <ResultsPage
-          score={score}
-          total={maxScore}
-          tier={tier}
-          results={results}
-          shareableUrl={shareableUrl}
-          initialFilter={currentFilter}
-          onFilterChange={setCurrentFilter}
-          onEditQuestion={goToQuestion}
-          onRestart={handleRestart}
-        />
+      <div className="container-fluid py-4 flex-grow-1">
+        <div className="container">
+          <ResultsPage
+            score={score}
+            total={maxScore}
+            tier={tier}
+            results={results}
+            shareableUrl={shareableUrl}
+            initialFilter={currentFilter}
+            onFilterChange={setCurrentFilter}
+            onEditQuestion={goToQuestion}
+            onRestart={handleRestart}
+          />
+        </div>
         <footer className="text-center py-4 mt-5">
           <div className="container">
             <p className="mb-0 text-muted">
@@ -278,7 +286,7 @@ function App() {
             </p>
           </div>
         </footer>
-      </>
+      </div>
     );
   }
 
