@@ -186,10 +186,6 @@ h4 {
   color: var(--bs-secondary);
 }
 
-.answer-row .form-check-label strong {
-  color: var(--bs-primary);
-}
-
 /* Info Box for Clarifications */
 .info-box {
   border-left: 4px solid var(--bs-primary);
@@ -208,12 +204,6 @@ h4 {
 .alert {
   border-radius: 8px;
   border: none;
-}
-
-.alert-info {
-  background-color: rgba(58, 95, 127, 0.1);
-  border-left: 4px solid var(--bs-primary);
-  color: var(--bs-secondary);
 }
 
 /* Results Page Specific */
@@ -457,12 +447,6 @@ footer p {
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
-  .border-primary {
-    border-color: #000 !important;
-  }
-  .text-primary {
-    color: #000 !important;
-  }
   .btn-primary {
     background-color: #000 !important;
     color: #fff !important;
