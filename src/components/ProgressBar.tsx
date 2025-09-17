@@ -19,8 +19,8 @@ const ProgressBar: React.FC<Props> = ({ current, total }) => {
         className="progress"
         role="progressbar"
         aria-valuenow={progress}
-        aria-valuemin="0"
-        aria-valuemax="100"
+        aria-valuemin={0}
+        aria-valuemax={100}
         aria-label={`Progress: ${progress}% complete`}
       >
         <div className="progress-bar" style={{ width: `${progress}%` }}></div>
