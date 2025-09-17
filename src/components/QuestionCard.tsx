@@ -1,6 +1,16 @@
 import React from "react";
+import { Question } from "../types";
 
-const QuestionCard = ({
+interface Props {
+  question: Question;
+  onAnswerSelect: (answerId: string) => void;
+  onNext: () => void;
+  onPrevious: () => void;
+  showPrevious?: boolean;
+  userAnswer: string | null | undefined;
+}
+
+const QuestionCard: React.FC<Props> = ({
   question,
   onAnswerSelect,
   onNext,

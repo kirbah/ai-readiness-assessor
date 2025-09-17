@@ -5,6 +5,7 @@ import questionsData from "./data/questions.json";
 import ProgressBar from "./components/ProgressBar";
 import QuestionCard from "./components/QuestionCard";
 import ResultsPage from "./components/ResultsPage";
+import { Question } from "./types";
 import "./styles/professional-theme.css";
 
 const TRACKING_ID = "G-6BMVBWLY6L";
@@ -13,20 +14,26 @@ const handleAcceptCookie = () => {
   ReactGA.initialize(TRACKING_ID);
 };
 
-function App() {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [userAnswers, setUserAnswers] = useState({});
-  const [showResults, setShowResults] = useState(false);
-  const [currentFilter, setCurrentFilter] = useState("all");
-  const [editMode, setEditMode] = useState(false);
-  const [urlError, setUrlError] = useState(null);
+type UserAnswers = { [key: string]: string };
+type Tier = "At Risk" | "Building Foundation" | "Well-Positioned";
 
-  const questions = questionsData;
+function App() {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+  const [userAnswers, setUserAnswers] = useState<UserAnswers>({});
+  const [showResults, setShowResults] = useState<boolean>(false);
+  const [currentFilter, setCurrentFilter] = useState<string>("all");
+  const [editMode, setEditMode] = useState<boolean>(false);
+  const [urlError, setUrlError] = useState<string | null>(null);
+
+  const questions: Question[] = questionsData;
   const questionsById = useMemo(() => {
-    return questions.reduce((acc, q) => {
-      acc[q.id] = q;
-      return acc;
-    }, {});
+    return questions.reduce(
+      (acc, q) => {
+        acc[q.id] = q;
+        return acc;
+      },
+      {} as { [key: number]: Question }
+    );
   }, [questions]);
 
   const maxScore = useMemo(() => {
@@ -62,7 +69,7 @@ function App() {
   }, [currentQuestionIndex]);
 
   const goToQuestion = useCallback(
-    (questionId) => {
+    (questionId: number) => {
       setEditMode(true);
       const index = questions.findIndex((q) => q.id === questionId);
       if (index !== -1) {
@@ -107,7 +114,7 @@ function App() {
   }, []);
 
   const handleAnswerSelect = useCallback(
-    (answerId) => {
+    (answerId: string) => {
       setUserAnswers((prev) => ({
         ...prev,
         [questions[currentQuestionIndex].id]: answerId,
@@ -127,7 +134,7 @@ function App() {
   const calculateScore = useCallback(() => {
     let totalScore = 0;
     Object.entries(userAnswers).forEach(([questionId, answerId]) => {
-      const question = questionsById[questionId];
+      const question = questionsById[parseInt(questionId, 10)];
       if (question) {
         const answer = question.answers.find((a) => a.id === answerId);
         if (answer) {
@@ -138,7 +145,7 @@ function App() {
     return totalScore;
   }, [userAnswers, questionsById]);
 
-  const getTier = useCallback((score) => {
+  const getTier = useCallback((score: number): Tier => {
     if (score >= 15) return "Well-Positioned";
     if (score >= 8) return "Building Foundation";
     return "At Risk";
@@ -259,12 +266,12 @@ function App() {
               tier={getTier(calculateScore())}
               results={Object.entries(userAnswers).map(
                 ([questionId, answerId]) => {
-                  const question = questionsById[questionId];
-                  const answer = question.answers.find(
-                    (a) => a.id === answerId
-                  );
+                  const question = questionsById[parseInt(questionId, 10)];
+                  const answer = question
+                    ? question.answers.find((a) => a.id === answerId)
+                    : undefined;
                   return {
-                    question: parseInt(questionId),
+                    question: parseInt(questionId, 10),
                     question_text: question
                       ? question.question_text
                       : "Question unavailable",

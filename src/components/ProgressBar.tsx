@@ -1,6 +1,11 @@
 import React from "react";
 
-const ProgressBar = ({ current, total }) => {
+interface Props {
+  current: number;
+  total: number;
+}
+
+const ProgressBar: React.FC<Props> = ({ current, total }) => {
   const progress = Math.round((current / total) * 100);
 
   return (
