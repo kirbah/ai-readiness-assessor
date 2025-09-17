@@ -4,6 +4,18 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { Result } from "../types";
 
+type ScoreStyle = {
+  icon: string;
+  color: string;
+  borderClass: string;
+};
+
+const scoreStyles: Record<number, ScoreStyle> = {
+  0: { icon: "🔴", color: "critical", borderClass: "border-danger" },
+  1: { icon: "🟡", color: "issues", borderClass: "border-warning" },
+  2: { icon: "🟢", color: "good", borderClass: "border-success" },
+};
+
 type Tier = "At Risk" | "Building Foundation" | "Well-Positioned";
 
 interface Props {
@@ -85,18 +97,6 @@ const ResultsPage: React.FC<Props> = ({
     } catch (err) {
       console.error("Failed to copy: ", err);
     }
-  };
-
-  const getIconForScore = (score: number) => {
-    if (score === 0) return "🔴"; // Filled red circle for critical
-    if (score === 1) return "🟡"; // Filled amber triangle for issues
-    return "🟢"; // Filled green circle for good
-  };
-
-  const getColorForScore = (score: number) => {
-    if (score === 0) return "critical";
-    if (score === 1) return "issues";
-    return "good";
   };
 
   const calendlyUrl = shareableUrl
@@ -212,21 +212,16 @@ const ResultsPage: React.FC<Props> = ({
               ) : (
                 <div className="accordion" id="resultsAccordion">
                   {filteredResults.map((result, index) => {
-                    const icon = getIconForScore(result.score);
-                    const iconClass = getColorForScore(result.score);
+                    const styles = scoreStyles[result.score] || scoreStyles[2];
+                    const icon = styles.icon;
+                    const iconClass = styles.color;
                     const isExpanded = false; // Default collapsed
 
                     return (
                       <div key={result.question} className="accordion-item">
                         <h2 className="accordion-header" id={`heading${index}`}>
                           <button
-                            className={`accordion-button collapsed border-start border-4 ${
-                              result.score === 2
-                                ? "border-success"
-                                : result.score === 1
-                                  ? "border-warning"
-                                  : "border-danger"
-                            }`}
+                            className={`accordion-button collapsed border-start border-4 ${styles.borderClass}`}
                             type="button"
                             data-bs-toggle="collapse"
                             data-bs-target={`#collapse${index}`}
