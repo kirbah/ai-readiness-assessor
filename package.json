@@ -15,6 +15,7 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
+    "test": "vitest",
     "preview": "vite preview",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -30,6 +31,9 @@
     "*.{js,css,md,html,json}": "prettier --write"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^24.5.1",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
@@ -41,9 +45,11 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "husky": "^9.1.7",
+    "jsdom": "^27.0.0",
     "lint-staged": "^16.1.6",
     "prettier": "^3.6.2",
     "typescript": "^5.9.2",
-    "vite": "^7.1.5"
+    "vite": "^7.1.5",
+    "vitest": "^3.2.4"
   }
 }
