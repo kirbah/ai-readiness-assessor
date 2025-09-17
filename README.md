@@ -30,6 +30,27 @@ The purpose of this tool is to:
 
 This is a modern, reliable, and secure client-side application built with **React** and **Bootstrap 5**, deployed via GitHub Actions.
 
+### **Privacy and Analytics**
+
+This project uses Google Analytics 4 (GA4) to collect anonymous usage data for improving the AI Readiness Assessor tool. No personal information is collected or stored.
+
+#### **What We Track (Post-Consent Only)**
+
+- **Page Views**: Anonymous navigation to questions and results (e.g., how many complete the assessment).
+- **Key Interactions** (aggregate events):
+  - Clicks on "Restart Assessment"
+  - Clicks to copy shareable results URLs (no URL content stored)
+  - Clicks on "Book Consultation Call" (segmented by assessment tier for optimization)
+
+#### **Privacy Details**
+
+- **Consent Required**: A cookie consent banner appears on first visit. Analytics only activate after you accept.
+- **No Sensitive Data**: Assessment answers, scores, or shareable URLs are not sent to GA. Only anonymized click facts and tiers (e.g., "Well-Positioned") for aggregate insights.
+- **Data Control**: Decline consent to disable all tracking. GA4 anonymizes IPs and retains data for 2 months (configurable).
+- **Policy**: For full details, see Google's [Analytics Privacy](https://support.google.com/analytics/answer/6004245).
+
+We respect your privacy and use this data solely to enhance the tool's usability and measure engagement.
+
 ---
 
 **Developed by Kiryl Bahdanau**

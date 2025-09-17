@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ReactGA from "react-ga4";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
@@ -61,6 +62,10 @@ const ResultsPage = ({
     try {
       await navigator.clipboard.writeText(shareableUrl || window.location.href);
       setIsCopied(true);
+      ReactGA.event({
+        category: "User",
+        action: "Copied Shareable URL",
+      });
       setTimeout(() => setIsCopied(false), 2500);
     } catch (err) {
       console.error("Failed to copy: ", err);
@@ -125,6 +130,13 @@ const ResultsPage = ({
                   className="btn btn-primary btn-lg"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => {
+                    ReactGA.event({
+                      category: "User",
+                      action: "Clicked Book Consultation",
+                      label: tier,
+                    });
+                  }}
                 >
                   <i className="bi bi-calendar3 me-2"></i>
                   Book Consultation Call
