@@ -55,41 +55,28 @@ function App() {
   const totalQuestions = questions.length;
 
   useEffect(() => {
-    console.log("=== LocalStorage Restore useEffect running ===");
-    console.log("totalQuestions:", totalQuestions);
-    console.log("questions.length:", questions.length);
-    console.log("questions[0]:", questions[0]);
-
     const savedAnswersStr = localStorage.getItem("aiAssessmentAnswers");
-    console.log("savedAnswersStr:", savedAnswersStr);
 
     if (savedAnswersStr) {
       try {
         const parsedAnswers = JSON.parse(savedAnswersStr);
-        console.log("parsedAnswers:", parsedAnswers);
         setUserAnswers(parsedAnswers);
 
         const numberOfAnswers = Object.keys(parsedAnswers).length;
-        console.log("numberOfAnswers:", numberOfAnswers);
         const isComplete = numberOfAnswers === totalQuestions;
-        console.log("isComplete:", isComplete);
 
         if (isComplete) {
-          console.log("Setting showResults to true");
           setShowResults(true);
         } else {
-          console.log("Finding first unanswered question...");
           // Find the first unanswered question
           let nextIndex = 0;
           for (let i = 0; i < totalQuestions; i++) {
             const questionId = questions[i].id;
             if (!parsedAnswers[questionId.toString()]) {
               nextIndex = i;
-              console.log(`First unanswered found at index: ${nextIndex}`);
               break;
             }
           }
-          console.log("Setting currentQuestionIndex to:", nextIndex);
           setCurrentQuestionIndex(nextIndex);
         }
       } catch (e) {
@@ -98,10 +85,7 @@ function App() {
         setUserAnswers({});
         setCurrentQuestionIndex(0);
       }
-    } else {
-      console.log("No saved answers found in localStorage");
     }
-    console.log("=== LocalStorage Restore useEffect complete ===");
   }, [totalQuestions, questions]);
 
   useEffect(() => {
