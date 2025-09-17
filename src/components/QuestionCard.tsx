@@ -23,9 +23,9 @@ const QuestionCard: React.FC<Props> = ({
 
   // Define the animation properties
   const variants = {
-    enter: { opacity: 0, x: 40 },
-    center: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -40 },
+    enter: { opacity: 0, rotateY: -90 },
+    center: { opacity: 1, rotateY: 0 },
+    exit: { opacity: 0, rotateY: 90 },
   };
 
   return (
@@ -35,10 +35,7 @@ const QuestionCard: React.FC<Props> = ({
       initial="enter"
       animate="center"
       exit="exit"
-      transition={{
-        x: { type: "spring", stiffness: 300, damping: 30 },
-        opacity: { duration: 0.2 },
-      }}
+      transition={{ duration: 0.5, ease: "easeInOut" }}
     >
       <div className="card-body">
         <h2 className="h4 mb-3 fw-bold">{question.question_text}</h2>

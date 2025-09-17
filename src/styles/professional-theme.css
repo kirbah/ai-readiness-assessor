@@ -461,5 +461,8 @@ footer p {
 /* Add this at the end of the file */
 .animation-container {
   position: relative;
-  overflow-x: hidden;
+  perspective: 1200px;
+
+  /* This is the crucial fix. It clips the animation, preventing scrollbars. */
+  overflow: hidden;
 }
