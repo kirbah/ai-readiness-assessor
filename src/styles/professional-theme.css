@@ -66,6 +66,12 @@ h4 {
   padding: 2rem;
 }
 
+@media (min-width: 992px) {
+  .card-body {
+    padding: 2.5rem;
+  }
+}
+
 /* Progress Bar Overrides */
 .progress {
   height: 0.5rem;
@@ -459,4 +465,9 @@ footer p {
     background-color: #000 !important;
     color: #fff !important;
   }
+}
+
+/* Custom color for advisor's notes */
+.advisors-note-color {
+  color: #3a5f7f;
 }

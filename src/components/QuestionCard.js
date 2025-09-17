@@ -72,16 +72,15 @@ const QuestionCard = ({
           })}
         </ul>
 
-        <div className="d-flex justify-content-between">
+        <div className="d-flex gap-3">
           {showPrevious && (
-            <button className="btn btn-outline-secondary" onClick={onPrevious}>
+            <button className="btn btn-primary" onClick={onPrevious}>
               Previous
             </button>
           )}
-          {!showPrevious && <div className="w-25"></div>}
 
           <button
-            className="btn btn-primary"
+            className="btn btn-primary ms-auto"
             onClick={onNext}
             disabled={!isAnswered}
           >

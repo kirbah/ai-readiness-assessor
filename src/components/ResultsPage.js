@@ -86,9 +86,9 @@ const ResultsPage = ({
     : "https://calendly.com/kiryl-bahdanau/ai-readiness";
 
   return (
-    <div className="container mt-5">
+    <div className="mt-5">
       <div className="row justify-content-center">
-        <div className="col-lg-10">
+        <div className="col-lg-12">
           <div className="card">
             <div className="card-header text-center">
               <h1 className="h3 mb-0">Your AI Readiness Report</h1>
@@ -100,7 +100,7 @@ const ResultsPage = ({
                   <CircularProgressbar
                     value={score}
                     maxValue={total}
-                    text={`${score}/20`}
+                    text={`${score}/${total}`}
                     styles={buildStyles({
                       pathColor: `var(--bs-primary)`,
                       textColor: `var(--bs-primary)`,
@@ -254,10 +254,7 @@ const ResultsPage = ({
 
                             {result.explanation && (
                               <div className="mb-3 info-box">
-                                <h6
-                                  className="fw-bold mb-2"
-                                  style={{ color: "#3a5f7f" }}
-                                >
+                                <h6 className="fw-bold mb-2 advisors-note-color">
                                   Advisor's Note
                                 </h6>
                                 <p className="small">{result.explanation}</p>
