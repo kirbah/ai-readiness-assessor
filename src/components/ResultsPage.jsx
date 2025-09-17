@@ -255,7 +255,7 @@ const ResultsPage = ({
                             {result.explanation && (
                               <div className="mb-3 info-box">
                                 <h6 className="fw-bold mb-2 advisors-note-color">
-                                  Advisor's Note
+                                  Advisor&apos;s Note
                                 </h6>
                                 <p className="small">{result.explanation}</p>
                               </div>
