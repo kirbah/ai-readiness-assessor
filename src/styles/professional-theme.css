@@ -457,3 +457,9 @@ footer p {
 .advisors-note-color {
   color: #3a5f7f;
 }
+
+/* Add this at the end of the file */
+.animation-container {
+  position: relative;
+  overflow-x: hidden;
+}

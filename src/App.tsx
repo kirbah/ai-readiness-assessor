@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useRef,
 } from "react";
+import { AnimatePresence } from "framer-motion";
 import ReactGA from "react-ga4";
 import CookieConsent from "react-cookie-consent";
 import questionsData from "./data/questions.json";
@@ -375,14 +376,19 @@ function App() {
                 total={totalQuestions}
               />
 
-              <QuestionCard
-                question={currentQuestion}
-                onAnswerSelect={handleAnswerSelect}
-                onNext={handleNext}
-                onPrevious={handlePrevious}
-                showPrevious={currentQuestionIndex > 0}
-                userAnswer={userAnswers[currentQuestion.id]}
-              />
+              <div className="animation-container">
+                <AnimatePresence mode="wait" initial={false}>
+                  <QuestionCard
+                    key={currentQuestion.id}
+                    question={currentQuestion}
+                    onAnswerSelect={handleAnswerSelect}
+                    onNext={handleNext}
+                    onPrevious={handlePrevious}
+                    showPrevious={currentQuestionIndex > 0}
+                    userAnswer={userAnswers[currentQuestion.id]}
+                  />
+                </AnimatePresence>
+              </div>
             </>
           </div>
         </div>

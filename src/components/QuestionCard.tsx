@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { Question } from "../types";
 
 interface Props {
@@ -20,8 +21,25 @@ const QuestionCard: React.FC<Props> = ({
 }) => {
   const isAnswered = !!userAnswer;
 
+  // Define the animation properties
+  const variants = {
+    enter: { opacity: 0, x: 40 },
+    center: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: -40 },
+  };
+
   return (
-    <div className="card question-card mb-4">
+    <motion.div
+      className="card question-card mb-4"
+      variants={variants}
+      initial="enter"
+      animate="center"
+      exit="exit"
+      transition={{
+        x: { type: "spring", stiffness: 300, damping: 30 },
+        opacity: { duration: 0.2 },
+      }}
+    >
       <div className="card-body">
         <h2 className="h4 mb-3 fw-bold">{question.question_text}</h2>
         {question.question_clarification && (
@@ -98,7 +116,7 @@ const QuestionCard: React.FC<Props> = ({
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
