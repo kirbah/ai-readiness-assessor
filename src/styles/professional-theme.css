@@ -460,3 +460,8 @@ footer p {
     color: #fff !important;
   }
 }
+
+/* Custom color for advisor's notes */
+.advisors-note-color {
+  color: #3a5f7f;
+}

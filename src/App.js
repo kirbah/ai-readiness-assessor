@@ -20,6 +20,16 @@ function App() {
       return acc;
     }, {});
   }, [questions]);
+
+  const maxScore = useMemo(() => {
+    return questions.reduce((total, question) => {
+      const highestAnswerScore = Math.max(
+        ...question.answers.map((a) => a.score)
+      );
+      return total + highestAnswerScore;
+    }, 0);
+  }, [questions]);
+
   const totalQuestions = questions.length;
 
   useEffect(() => {
@@ -244,7 +254,7 @@ function App() {
       <>
         <ResultsPage
           score={score}
-          total={20}
+          total={maxScore}
           tier={tier}
           results={results}
           shareableUrl={shareableUrl}

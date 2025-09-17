@@ -100,7 +100,7 @@ const ResultsPage = ({
                   <CircularProgressbar
                     value={score}
                     maxValue={total}
-                    text={`${score}/20`}
+                    text={`${score}/${total}`}
                     styles={buildStyles({
                       pathColor: `var(--bs-primary)`,
                       textColor: `var(--bs-primary)`,
@@ -254,10 +254,7 @@ const ResultsPage = ({
 
                             {result.explanation && (
                               <div className="mb-3 info-box">
-                                <h6
-                                  className="fw-bold mb-2"
-                                  style={{ color: "#3a5f7f" }}
-                                >
+                                <h6 className="fw-bold mb-2 advisors-note-color">
                                   Advisor's Note
                                 </h6>
                                 <p className="small">{result.explanation}</p>
