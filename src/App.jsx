@@ -246,128 +246,104 @@ function App() {
     }
   }, [showResults]);
 
-  if (showResults) {
-    const score = calculateScore();
-    const tier = getTier(score);
-
-    const results = Object.entries(userAnswers).map(
-      ([questionId, answerId]) => {
-        const question = questionsById[questionId];
-        const answer = question.answers.find((a) => a.id === answerId);
-        return {
-          question: parseInt(questionId),
-          question_text: question
-            ? question.question_text
-            : "Question unavailable",
-          question_clarification: question
-            ? question.question_clarification
-            : "",
-          selected_text: answer ? answer.answer_text : "Answer unavailable",
-          selected_clarification: answer ? answer.answer_clarification : "",
-          score: answer ? answer.score : 0,
-          explanation: answer ? answer.explanation : "No explanation available",
-        };
-      }
-    );
-
-    const shareUrlParams = new URLSearchParams();
-    Object.entries(userAnswers).forEach(([questionId, answerId]) => {
-      shareUrlParams.set(`q${questionId}`, answerId);
-    });
-    shareUrlParams.set("filter", currentFilter);
-    const shareableUrl = `${window.location.origin}${
-      window.location.pathname
-    }?${shareUrlParams.toString()}`;
-
-    return (
-      <div className="container-fluid py-4 flex-grow-1">
-        <div className="container">
-          <ResultsPage
-            score={score}
-            total={maxScore}
-            tier={tier}
-            results={results}
-            shareableUrl={shareableUrl}
-            initialFilter={currentFilter}
-            onFilterChange={setCurrentFilter}
-            onEditQuestion={goToQuestion}
-            onRestart={handleRestart}
-          />
-        </div>
-        <CookieConsent
-          location="bottom"
-          buttonText="I understand"
-          cookieName="aiReadinessAssessorCookieConsent"
-          style={{ background: "#2B373B" }}
-          buttonStyle={{ color: "#4e503b", fontSize: "13px" }}
-          expires={150}
-          onAccept={handleAcceptCookie}
-        >
-          This website uses cookies for analytics purposes to understand how
-          users interact with the assessment.
-        </CookieConsent>
-        <footer className="text-center py-4 mt-5">
-          <div className="container">
-            <p className="mb-0 text-muted">
-              &copy; 2025 AI Readiness Assessor.{" "}
-              <a
-                href="https://www.linkedin.com/in/kiryl-bahdanau/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Kiryl Bahdanau
-              </a>
-              . All Rights Reserved.
-            </p>
-          </div>
-        </footer>
-      </div>
-    );
-  }
-
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
     <div className="App d-flex flex-column min-vh-100">
-      <div className="container-fluid py-4 flex-grow-1">
-        <div className="container">
-          {urlError && (
-            <div
-              className="alert alert-danger alert-dismissible fade show mb-4"
-              role="alert"
-            >
-              {urlError}
-              <button
-                type="button"
-                className="btn-close"
-                onClick={() => setUrlError(null)}
-              ></button>
-            </div>
-          )}
-          <div className="text-center mb-5">
-            <h1 className="h1 fw-bold mb-3">AI Readiness Assessment</h1>
-            <p className="lead text-muted">
-              Evaluate your organization's readiness for enterprise AI adoption
-            </p>
+      {showResults ? (
+        <div className="container-fluid py-4 flex-grow-1">
+          <div className="container">
+            <ResultsPage
+              score={calculateScore()}
+              total={maxScore}
+              tier={getTier(calculateScore())}
+              results={Object.entries(userAnswers).map(
+                ([questionId, answerId]) => {
+                  const question = questionsById[questionId];
+                  const answer = question.answers.find(
+                    (a) => a.id === answerId
+                  );
+                  return {
+                    question: parseInt(questionId),
+                    question_text: question
+                      ? question.question_text
+                      : "Question unavailable",
+                    question_clarification: question
+                      ? question.question_clarification
+                      : "",
+                    selected_text: answer
+                      ? answer.answer_text
+                      : "Answer unavailable",
+                    selected_clarification: answer
+                      ? answer.answer_clarification
+                      : "",
+                    score: answer ? answer.score : 0,
+                    explanation: answer
+                      ? answer.explanation
+                      : "No explanation available",
+                  };
+                }
+              )}
+              shareableUrl={`${window.location.origin}${
+                window.location.pathname
+              }?${new URLSearchParams(
+                Object.entries(userAnswers).reduce(
+                  (acc, [questionId, answerId]) => {
+                    acc[`q${questionId}`] = answerId;
+                    return acc;
+                  },
+                  { filter: currentFilter }
+                )
+              ).toString()}`}
+              initialFilter={currentFilter}
+              onFilterChange={setCurrentFilter}
+              onEditQuestion={goToQuestion}
+              onRestart={handleRestart}
+            />
           </div>
-
-          <>
-            <ProgressBar
-              current={currentQuestionIndex + 1}
-              total={totalQuestions}
-            />
-
-            <QuestionCard
-              question={currentQuestion}
-              onAnswerSelect={handleAnswerSelect}
-              onNext={handleNext}
-              onPrevious={handlePrevious}
-              showPrevious={currentQuestionIndex > 0}
-              userAnswer={userAnswers[currentQuestion.id]}
-            />
-          </>
         </div>
-      </div>
+      ) : (
+        <div className="container-fluid py-4 flex-grow-1">
+          <div className="container">
+            {urlError && (
+              <div
+                className="alert alert-danger alert-dismissible fade show mb-4"
+                role="alert"
+              >
+                {urlError}
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setUrlError(null)}
+                ></button>
+              </div>
+            )}
+            <div className="text-center mb-5">
+              <h1 className="h1 fw-bold mb-3">AI Readiness Assessment</h1>
+              <p className="lead text-muted">
+                Evaluate your organization's readiness for enterprise AI
+                adoption
+              </p>
+            </div>
+
+            <>
+              <ProgressBar
+                current={currentQuestionIndex + 1}
+                total={totalQuestions}
+              />
+
+              <QuestionCard
+                question={currentQuestion}
+                onAnswerSelect={handleAnswerSelect}
+                onNext={handleNext}
+                onPrevious={handlePrevious}
+                showPrevious={currentQuestionIndex > 0}
+                userAnswer={userAnswers[currentQuestion.id]}
+              />
+            </>
+          </div>
+        </div>
+      )}
       <CookieConsent
         location="bottom"
         buttonText="I understand"
