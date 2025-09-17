@@ -130,6 +130,13 @@ const ResultsPage = ({
                   className="btn btn-primary btn-lg"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => {
+                    ReactGA.event({
+                      category: "User",
+                      action: "Clicked Book Consultation",
+                      label: tier,
+                    });
+                  }}
                 >
                   <i className="bi bi-calendar3 me-2"></i>
                   Book Consultation Call
