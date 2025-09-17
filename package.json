@@ -20,7 +20,10 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.{js,jsx,css,md,html,json}": "prettier --write"
+    "*.{js,jsx,ts,tsx,css,md,html,json}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
   },
   "devDependencies": {
     "@types/node": "^24.5.1",
