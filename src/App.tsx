@@ -65,7 +65,10 @@ function App() {
   }, [userAnswers]);
 
   useEffect(() => {
-    localStorage.setItem("aiAssessmentCurrentIndex", currentQuestionIndex);
+    localStorage.setItem(
+      "aiAssessmentCurrentIndex",
+      currentQuestionIndex.toString()
+    );
   }, [currentQuestionIndex]);
 
   const goToQuestion = useCallback(
@@ -153,7 +156,7 @@ function App() {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const urlAnswers = {};
+    const urlAnswers: { [key: number]: string } = {};
     let hasAnyValidParam = false;
 
     // Step 1: Parse all potential valid answers from URL
@@ -299,7 +302,7 @@ function App() {
                     acc[`q${questionId}`] = answerId;
                     return acc;
                   },
-                  { filter: currentFilter }
+                  { filter: currentFilter } as Record<string, string>
                 )
               ).toString()}`}
               initialFilter={currentFilter}
@@ -358,8 +361,6 @@ function App() {
         style={{ background: "#2B373B" }}
         buttonStyle={{ color: "#4e503b", fontSize: "13px" }}
         expires={150}
-        link="https://github.com/kirbah/ai-readiness-assessor#privacy-and-analytics"
-        linkStyle={{ color: "#fff", fontSize: "13px" }}
         onAccept={handleAcceptCookie}
       >
         This website uses cookies for analytics purposes to understand how users

@@ -60,7 +60,7 @@ const ResultsPage: React.FC<Props> = ({
     return true; // all
   });
 
-  const handleFilterChange = (newFilter) => {
+  const handleFilterChange = (newFilter: string) => {
     setFilter(newFilter);
     if (onFilterChange) {
       onFilterChange(newFilter);
@@ -87,13 +87,13 @@ const ResultsPage: React.FC<Props> = ({
     }
   };
 
-  const getIconForScore = (score) => {
+  const getIconForScore = (score: number) => {
     if (score === 0) return "🔴"; // Filled red circle for critical
     if (score === 1) return "🟡"; // Filled amber triangle for issues
     return "🟢"; // Filled green circle for good
   };
 
-  const getColorForScore = (score) => {
+  const getColorForScore = (score: number) => {
     if (score === 0) return "critical";
     if (score === 1) return "issues";
     return "good";
