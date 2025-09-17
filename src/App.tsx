@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef,
+} from "react";
 import ReactGA from "react-ga4";
 import CookieConsent from "react-cookie-consent";
 import questionsData from "./data/questions.json";
@@ -18,6 +24,7 @@ type UserAnswers = { [key: string]: string };
 type Tier = "At Risk" | "Building Foundation" | "Well-Positioned";
 
 function App() {
+  const isInitialMount = useRef(true);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [userAnswers, setUserAnswers] = useState<UserAnswers>({});
   const [showResults, setShowResults] = useState<boolean>(false);
@@ -48,19 +55,45 @@ function App() {
   const totalQuestions = questions.length;
 
   useEffect(() => {
-    const savedAnswers = localStorage.getItem("aiAssessmentAnswers");
-    if (savedAnswers) {
-      setUserAnswers(JSON.parse(savedAnswers));
-    }
+    const savedAnswersStr = localStorage.getItem("aiAssessmentAnswers");
 
-    const savedIndex = localStorage.getItem("aiAssessmentCurrentIndex");
-    if (savedIndex) {
-      const index = parseInt(savedIndex, 10);
-      setCurrentQuestionIndex(Math.min(Math.max(0, index), totalQuestions - 1));
+    if (savedAnswersStr) {
+      try {
+        const parsedAnswers = JSON.parse(savedAnswersStr);
+        setUserAnswers(parsedAnswers);
+
+        const numberOfAnswers = Object.keys(parsedAnswers).length;
+        const isComplete = numberOfAnswers === totalQuestions;
+
+        if (isComplete) {
+          setShowResults(true);
+        } else {
+          // Find the first unanswered question
+          let nextIndex = 0;
+          for (let i = 0; i < totalQuestions; i++) {
+            const questionId = questions[i].id;
+            if (!parsedAnswers[questionId.toString()]) {
+              nextIndex = i;
+              break;
+            }
+          }
+          setCurrentQuestionIndex(nextIndex);
+        }
+      } catch (e) {
+        console.error("Failed to parse saved answers:", e);
+        localStorage.removeItem("aiAssessmentAnswers");
+        setUserAnswers({});
+        setCurrentQuestionIndex(0);
+      }
     }
-  }, [totalQuestions]);
+  }, [totalQuestions, questions]);
 
   useEffect(() => {
+    // Skip saving on initial mount to avoid overwriting restored state
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     localStorage.setItem("aiAssessmentAnswers", JSON.stringify(userAnswers));
   }, [userAnswers]);
 
