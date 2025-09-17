@@ -41,6 +41,15 @@ const QuestionCard = ({
                 key={answer.id}
                 className={`answer-row ${isSelected ? "selected" : ""}`}
                 onClick={() => onAnswerSelect(answer.id)}
+                role="radio"
+                aria-checked={isSelected}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    onAnswerSelect(answer.id);
+                  }
+                }}
               >
                 <div className="form-check">
                   <input
@@ -49,8 +58,7 @@ const QuestionCard = ({
                     name={`answer-${question.id}`}
                     id={`answer-${answer.id}`}
                     checked={isSelected}
-                    onChange={() => {}} // Prevent direct change, use click on row
-                    aria-label={answer.answer_text}
+                    onChange={() => onAnswerSelect(answer.id)}
                   />
                   <label
                     className="form-check-label w-100"

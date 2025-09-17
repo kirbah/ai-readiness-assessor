@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import questionsData from "./data/questions.json";
 import ProgressBar from "./components/ProgressBar";
 import QuestionCard from "./components/QuestionCard";
 import ResultsPage from "./components/ResultsPage";
-import "./App.css";
 import "./styles/professional-theme.css";
 
 function App() {
@@ -14,7 +13,7 @@ function App() {
   const [editMode, setEditMode] = useState(false);
   const [urlError, setUrlError] = useState(null);
 
-  const questions = useMemo(() => questionsData, []);
+  const questions = questionsData;
   const questionsById = useMemo(() => {
     return questions.reduce((acc, q) => {
       acc[q.id] = q;
@@ -31,9 +30,10 @@ function App() {
 
     const savedIndex = localStorage.getItem("aiAssessmentCurrentIndex");
     if (savedIndex) {
-      setCurrentQuestionIndex(parseInt(savedIndex, 10));
+      const index = parseInt(savedIndex, 10);
+      setCurrentQuestionIndex(Math.min(Math.max(0, index), totalQuestions - 1));
     }
-  }, []);
+  }, [totalQuestions]);
 
   useEffect(() => {
     localStorage.setItem("aiAssessmentAnswers", JSON.stringify(userAnswers));
@@ -43,31 +43,19 @@ function App() {
     localStorage.setItem("aiAssessmentCurrentIndex", currentQuestionIndex);
   }, [currentQuestionIndex]);
 
-  const goToQuestion = (questionId) => {
-    setEditMode(true);
-    const index = questions.findIndex((q) => q.id === questionId);
-    if (index !== -1) {
-      setCurrentQuestionIndex(index);
-    }
-    setShowResults(false);
-  };
+  const goToQuestion = useCallback(
+    (questionId) => {
+      setEditMode(true);
+      const index = questions.findIndex((q) => q.id === questionId);
+      if (index !== -1) {
+        setCurrentQuestionIndex(index);
+      }
+      setShowResults(false);
+    },
+    [questions]
+  );
 
-  const handleAnswerSelect = (answerId) => {
-    setUserAnswers({
-      ...userAnswers,
-      [questions[currentQuestionIndex].id]: answerId,
-    });
-
-    if (editMode) {
-      // In edit mode, return to results after answer change
-      setEditMode(false);
-      setShowResults(true);
-    } else {
-      handleNext();
-    }
-  };
-
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (editMode) {
       // In edit mode, always return to results
       setEditMode(false);
@@ -77,15 +65,15 @@ function App() {
     } else {
       setShowResults(true);
     }
-  };
+  }, [editMode, currentQuestionIndex, totalQuestions]);
 
-  const handlePrevious = () => {
+  const handlePrevious = useCallback(() => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
-  };
+  }, [currentQuestionIndex]);
 
-  const handleRestart = () => {
+  const handleRestart = useCallback(() => {
     setCurrentQuestionIndex(0);
     setUserAnswers({});
     setShowResults(false);
@@ -94,9 +82,27 @@ function App() {
     localStorage.removeItem("aiAssessmentCurrentIndex");
     localStorage.removeItem("aiAssessmentAnswers");
     window.history.replaceState({}, document.title, window.location.pathname);
-  };
+  }, []);
 
-  const calculateScore = () => {
+  const handleAnswerSelect = useCallback(
+    (answerId) => {
+      setUserAnswers((prev) => ({
+        ...prev,
+        [questions[currentQuestionIndex].id]: answerId,
+      }));
+
+      if (editMode) {
+        // In edit mode, return to results after answer change
+        setEditMode(false);
+        setShowResults(true);
+      } else {
+        handleNext();
+      }
+    },
+    [currentQuestionIndex, editMode, questions, handleNext]
+  );
+
+  const calculateScore = useCallback(() => {
     let totalScore = 0;
     Object.entries(userAnswers).forEach(([questionId, answerId]) => {
       const question = questionsById[questionId];
@@ -108,47 +114,81 @@ function App() {
       }
     });
     return totalScore;
-  };
+  }, [userAnswers, questionsById]);
 
-  const getTier = (score) => {
+  const getTier = useCallback((score) => {
     if (score >= 15) return "Well-Positioned";
     if (score >= 8) return "Building Foundation";
     return "At Risk";
-  };
+  }, []);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const urlAnswers = {};
-    let hasValidAnswers = false;
+    let hasAnyValidParam = false;
 
-    for (let i = 1; i <= totalQuestions; i++) {
-      const paramKey = `q${i}`;
+    // Step 1: Parse all potential valid answers from URL
+    for (const q of questions) {
+      const paramKey = `q${q.id}`;
       const answerId = urlParams.get(paramKey);
       if (answerId) {
-        if (/^\d+[a-c]$/.test(answerId)) {
-          urlAnswers[i] = answerId;
-          hasValidAnswers = true;
+        hasAnyValidParam = true;
+        // Validate: Check if answerId matches expected format and belongs to question's answers
+        if (
+          questionsById[q.id] &&
+          questionsById[q.id].answers.some((a) => a.id === answerId)
+        ) {
+          urlAnswers[q.id] = answerId;
         }
       }
     }
 
-    if (hasValidAnswers && Object.keys(urlAnswers).length === totalQuestions) {
+    const numAnsweredFromUrl = Object.keys(urlAnswers).length;
+    const allQuestionsAnsweredInUrl = numAnsweredFromUrl === totalQuestions;
+    const hasAnyUrlAnswer = numAnsweredFromUrl > 0;
+
+    if (allQuestionsAnsweredInUrl) {
+      // All questions correctly answered via URL
       setUserAnswers(urlAnswers);
       setShowResults(true);
       setUrlError(null);
-    } else if (
-      Object.keys(urlAnswers).length > 0 &&
-      Object.keys(urlAnswers).length < totalQuestions
-    ) {
-      setUrlError(
-        "The assessment link is incomplete. Starting from the first unanswered question."
-      );
-      const firstUnansweredIndex = Math.min(
-        ...Object.keys(urlAnswers).map(Number)
-      );
-      setUserAnswers(urlAnswers);
-      setCurrentQuestionIndex(firstUnansweredIndex);
-    } else if (hasValidAnswers) {
+    } else if (hasAnyUrlAnswer) {
+      // Some valid answers from URL, but not all
+      // Find the first unanswered question to redirect user
+      let firstUnansweredQuestionId = null;
+      for (const q of questions) {
+        if (!urlAnswers[q.id]) {
+          firstUnansweredQuestionId = q.id;
+          break;
+        }
+      }
+
+      if (firstUnansweredQuestionId !== null) {
+        // Found a gap, redirect to the first missing question
+        setUserAnswers(urlAnswers);
+        const firstUnansweredIndex = questions.findIndex(
+          (q) => q.id === firstUnansweredQuestionId
+        );
+        setCurrentQuestionIndex(firstUnansweredIndex);
+        setShowResults(false);
+        setUrlError(
+          "The assessment link is incomplete. Please complete the remaining questions."
+        );
+      } else {
+        // Fallback: treat as invalid
+        setUrlError(
+          "The assessment link contains invalid or incomplete data. Starting a new evaluation."
+        );
+        setUserAnswers({});
+        setCurrentQuestionIndex(0);
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname
+        );
+      }
+    } else if (hasAnyValidParam) {
+      // No valid answers, but some q params were present (all invalid)
       setUrlError(
         "The assessment link contains invalid data. Starting a new evaluation."
       );
@@ -156,6 +196,7 @@ function App() {
       setCurrentQuestionIndex(0);
       window.history.replaceState({}, document.title, window.location.pathname);
     } else {
+      // No URL parameters relevant to answers found
       setUrlError(null);
     }
 
@@ -164,7 +205,7 @@ function App() {
     if (filterParam && ["critical", "issues", "all"].includes(filterParam)) {
       setCurrentFilter(filterParam);
     }
-  }, [totalQuestions]);
+  }, [questions, questionsById, totalQuestions]);
 
   if (showResults) {
     const score = calculateScore();
