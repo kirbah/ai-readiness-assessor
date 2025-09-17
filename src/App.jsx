@@ -1,9 +1,17 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
+import ReactGA from "react-ga4";
+import CookieConsent from "react-cookie-consent";
 import questionsData from "./data/questions.json";
 import ProgressBar from "./components/ProgressBar";
 import QuestionCard from "./components/QuestionCard";
 import ResultsPage from "./components/ResultsPage";
 import "./styles/professional-theme.css";
+
+const TRACKING_ID = "G-6BMVBWLY6L";
+
+const handleAcceptCookie = () => {
+  ReactGA.initialize(TRACKING_ID);
+};
 
 function App() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -84,6 +92,10 @@ function App() {
   }, [currentQuestionIndex]);
 
   const handleRestart = useCallback(() => {
+    ReactGA.event({
+      category: "User",
+      action: "Clicked Restart Assessment",
+    });
     setCurrentQuestionIndex(0);
     setUserAnswers({});
     setShowResults(false);
@@ -219,6 +231,17 @@ function App() {
 
   useEffect(() => {
     if (showResults) {
+      ReactGA.send({ hitType: "pageview", page: "/results" });
+    } else {
+      ReactGA.send({
+        hitType: "pageview",
+        page: `/question/${currentQuestionIndex + 1}`,
+      });
+    }
+  }, [showResults, currentQuestionIndex]);
+
+  useEffect(() => {
+    if (showResults) {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     }
   }, [showResults]);
@@ -271,6 +294,18 @@ function App() {
             onRestart={handleRestart}
           />
         </div>
+        <CookieConsent
+          location="bottom"
+          buttonText="I understand"
+          cookieName="aiReadinessAssessorCookieConsent"
+          style={{ background: "#2B373B" }}
+          buttonStyle={{ color: "#4e503b", fontSize: "13px" }}
+          expires={150}
+          onAccept={handleAcceptCookie}
+        >
+          This website uses cookies for analytics purposes to understand how
+          users interact with the assessment.
+        </CookieConsent>
         <footer className="text-center py-4 mt-5">
           <div className="container">
             <p className="mb-0 text-muted">
@@ -333,6 +368,18 @@ function App() {
           </>
         </div>
       </div>
+      <CookieConsent
+        location="bottom"
+        buttonText="I understand"
+        cookieName="aiReadinessAssessorCookieConsent"
+        style={{ background: "#2B373B" }}
+        buttonStyle={{ color: "#4e503b", fontSize: "13px" }}
+        expires={150}
+        onAccept={handleAcceptCookie}
+      >
+        This website uses cookies for analytics purposes to understand how users
+        interact with the assessment.
+      </CookieConsent>
       <footer className="text-center py-4 mt-5">
         <div className="container">
           <p className="mb-0 text-muted">

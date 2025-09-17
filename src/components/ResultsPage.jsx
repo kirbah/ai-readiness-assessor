@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ReactGA from "react-ga4";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
@@ -61,6 +62,10 @@ const ResultsPage = ({
     try {
       await navigator.clipboard.writeText(shareableUrl || window.location.href);
       setIsCopied(true);
+      ReactGA.event({
+        category: "User",
+        action: "Copied Shareable URL",
+      });
       setTimeout(() => setIsCopied(false), 2500);
     } catch (err) {
       console.error("Failed to copy: ", err);
