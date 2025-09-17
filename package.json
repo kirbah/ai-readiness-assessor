@@ -12,10 +12,13 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.0.3",
+    "prettier": "^3.6.2",
     "vite": "^7.1.5"
   }
 }
