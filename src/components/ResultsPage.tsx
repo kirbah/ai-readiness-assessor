@@ -2,8 +2,23 @@ import React, { useState } from "react";
 import ReactGA from "react-ga4";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { Result } from "../types";
 
-const ResultsPage = ({
+type Tier = "At Risk" | "Building Foundation" | "Well-Positioned";
+
+interface Props {
+  score: number;
+  total: number;
+  tier: Tier;
+  results: Result[];
+  shareableUrl: string;
+  initialFilter: string;
+  onFilterChange: (newFilter: string) => void;
+  onEditQuestion: (questionId: number) => void;
+  onRestart: () => void;
+}
+
+const ResultsPage: React.FC<Props> = ({
   score,
   total,
   tier,
@@ -14,7 +29,7 @@ const ResultsPage = ({
   onEditQuestion,
   onRestart,
 }) => {
-  const [filter, setFilter] = useState(initialFilter || "all");
+  const [filter, setFilter] = useState<string>(initialFilter || "all");
   const [isCopied, setIsCopied] = useState(false);
 
   const tierDescriptions = {
