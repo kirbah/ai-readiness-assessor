@@ -29,8 +29,8 @@ const ResultsPage = ({
     tier === "Well-Positioned"
       ? "success"
       : tier === "Building Foundation"
-      ? "warning"
-      : "danger";
+        ? "warning"
+        : "danger";
 
   // Calculate counts for filters
   const criticalCount = results.filter((r) => r.score === 0).length;
@@ -197,8 +197,8 @@ const ResultsPage = ({
                               result.score === 2
                                 ? "border-success"
                                 : result.score === 1
-                                ? "border-warning"
-                                : "border-danger"
+                                  ? "border-warning"
+                                  : "border-danger"
                             }`}
                             type="button"
                             data-bs-toggle="collapse"
