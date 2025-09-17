@@ -35,6 +35,10 @@ jobs:
       - name: Check code formatting
         run: npm run format:check
 
+      # Add this new step to run ESLint
+      - name: Run linter check
+        run: npm run lint
+
       # 5. Runs the build command. This will fail if the app doesn't compile.
       - name: Build application
         run: npm run build
