@@ -39,6 +39,10 @@ jobs:
       - name: Run linter check
         run: npm run lint
 
+      # Add this new step to run tests
+      - name: Run unit tests
+        run: npm test
+
       # 5. Runs the build command. This will fail if the app doesn't compile.
       - name: Build application
         run: npm run build
