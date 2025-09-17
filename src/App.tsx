@@ -27,10 +27,13 @@ function App() {
 
   const questions: Question[] = questionsData;
   const questionsById = useMemo(() => {
-    return questions.reduce((acc, q) => {
-      acc[q.id] = q;
-      return acc;
-    }, {} as { [key: number]: Question });
+    return questions.reduce(
+      (acc, q) => {
+        acc[q.id] = q;
+        return acc;
+      },
+      {} as { [key: number]: Question }
+    );
   }, [questions]);
 
   const maxScore = useMemo(() => {
