@@ -351,10 +351,20 @@ function App() {
         style={{ background: "#2B373B" }}
         buttonStyle={{ color: "#4e503b", fontSize: "13px" }}
         expires={150}
+        link="https://github.com/kirbah/ai-readiness-assessor#privacy-and-analytics"
+        linkStyle={{ color: "#fff", fontSize: "13px" }}
         onAccept={handleAcceptCookie}
       >
         This website uses cookies for analytics purposes to understand how users
-        interact with the assessment.
+        interact with the assessment.{" "}
+        <a
+          aria-label="Privacy and Analytics details"
+          href="https://github.com/kirbah/ai-readiness-assessor#privacy-and-analytics"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn more
+        </a>
       </CookieConsent>
       <footer className="text-center py-4 mt-5">
         <div className="container">
