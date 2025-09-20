@@ -6,6 +6,7 @@
   "homepage": "https://kirbah.github.io/ai-readiness-assessor",
   "dependencies": {
     "bootstrap": "^5.3.8",
+    "framer-motion": "^12.23.13",
     "react": "^19.1.1",
     "react-circular-progressbar": "^2.2.0",
     "react-cookie-consent": "^9.0.0",
@@ -13,7 +14,7 @@
     "react-ga4": "^2.1.0"
   },
   "scripts": {
-    "start": "vite",
+    "start": "vite --host",
     "build": "vite build",
     "test": "vitest",
     "preview": "vite preview",
