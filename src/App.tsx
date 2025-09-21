@@ -95,15 +95,15 @@ function App() {
       isInitialMount.current = false;
       return;
     }
-    localStorage.setItem("aiAssessmentAnswers", JSON.stringify(userAnswers));
+    // Only save to localStorage if there are actual answers to save.
+    // This prevents writing an empty object '{}' to storage on reset.
+    if (Object.keys(userAnswers).length > 0) {
+      localStorage.setItem("aiAssessmentAnswers", JSON.stringify(userAnswers));
+    } else {
+      // If the answers are empty, ensure the item is removed.
+      localStorage.removeItem("aiAssessmentAnswers");
+    }
   }, [userAnswers]);
-
-  useEffect(() => {
-    localStorage.setItem(
-      "aiAssessmentCurrentIndex",
-      currentQuestionIndex.toString()
-    );
-  }, [currentQuestionIndex]);
 
   const goToQuestion = useCallback(
     (questionId: number) => {
@@ -145,7 +145,6 @@ function App() {
     setShowResults(false);
     setCurrentFilter("all");
     setEditMode(false);
-    localStorage.removeItem("aiAssessmentCurrentIndex");
     localStorage.removeItem("aiAssessmentAnswers");
     window.history.replaceState({}, document.title, window.location.pathname);
   }, []);
