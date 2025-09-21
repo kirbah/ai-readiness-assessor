@@ -84,6 +84,7 @@ const QuestionCard: React.FC<Props> = ({
                     id={`answer-${answer.id}`}
                     checked={isSelected}
                     onChange={() => onAnswerSelect(answer.id)}
+                    data-testid={`answer-${answer.id}`}
                   />
                   <label
                     className="form-check-label w-100"

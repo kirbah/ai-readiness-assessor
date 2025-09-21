@@ -83,6 +83,7 @@ export default [
     ignores: [
       "dist/**",
       "build/**",
+      "coverage/**",
       "**/*.min.js",
       "eslint.config.js",
       "vite.config.js",
