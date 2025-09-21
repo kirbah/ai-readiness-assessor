@@ -30,7 +30,7 @@
       "eslint --fix",
       "prettier --write"
     ],
-    "*.{js,css,md,html,json}": "prettier --write"
+    "*.{js,css,md,html,json,yml}": "prettier --write"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.8.0",
