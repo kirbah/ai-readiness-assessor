@@ -278,7 +278,6 @@ const ResultsPage: React.FC<Props> = ({
                             id={`collapse${index}`}
                             className="accordion-collapse collapse"
                             aria-labelledby={`heading${index}`}
-                            data-bs-parent="#resultsAccordion"
                           >
                             <div className="accordion-body">
                               <motion.div
