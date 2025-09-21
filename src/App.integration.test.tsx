@@ -37,6 +37,25 @@ Object.defineProperty(window, "history", {
 describe("App Integration Tests", () => {
   const scrollToMock = vi.fn();
 
+  // Helper function to complete the assessment
+  const completeAssessment = async (
+    user: ReturnType<typeof userEvent.setup>
+  ) => {
+    for (const question of questionsData) {
+      await waitFor(() =>
+        expect(screen.getByText(question.question_text)).toBeInTheDocument()
+      );
+      // Select the FIRST answer for every question (score: 2)
+      const answerOptions = screen.getAllByRole("radio");
+      await user.click(answerOptions[0]);
+    }
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { name: /Your AI Readiness Report/i })
+      ).toBeInTheDocument();
+    });
+  };
+
   beforeEach(() => {
     window.scrollTo = scrollToMock;
     localStorage.clear();
@@ -144,23 +163,12 @@ describe("App Integration Tests", () => {
   describe("User Interaction and Navigation Scenarios", () => {
     it("should allow user to change their answer from the results page and see the score update", async () => {
       const user = userEvent.setup();
-      // Arrange: Complete the assessment to get to the results page
       render(<App />);
-      for (const question of questionsData) {
-        await waitFor(() =>
-          expect(screen.getByText(question.question_text)).toBeInTheDocument()
-        );
-        // Select the FIRST answer for every question (score: 2)
-        const answerOptions = screen.getAllByRole("radio");
-        await user.click(answerOptions[0]);
-      }
+
+      // Arrange: Complete the assessment to get to the results page
+      await completeAssessment(user);
 
       // Assert: We are on the results page with the initial score
-      await waitFor(() => {
-        expect(
-          screen.getByRole("heading", { name: /Your AI Readiness Report/i })
-        ).toBeInTheDocument();
-      });
       expect(screen.getByText("20/20")).toBeInTheDocument(); // 10 questions * 2 score
       expect(screen.getByText("Well-Positioned")).toBeInTheDocument();
 
@@ -178,7 +186,16 @@ describe("App Integration Tests", () => {
       });
 
       // Act: Select the THIRD answer (score: 0)
-      await user.click(screen.getByTestId("answer-1c"));
+      const thirdAnswerText = "Ad-hoc / Not Formally Designed";
+      const thirdAnswerElement = screen
+        .getByText(thirdAnswerText)
+        .closest("li");
+      if (!thirdAnswerElement) {
+        throw new Error(
+          `Could not find answer element with text: ${thirdAnswerText}`
+        );
+      }
+      await user.click(thirdAnswerElement);
 
       // Assert: The app should immediately return to the results page with the updated score
       await waitFor(() => {
@@ -218,20 +235,10 @@ describe("App Integration Tests", () => {
 
     it("should restart the assessment from the results page", async () => {
       const user = userEvent.setup();
-      // Go to results page first
       render(<App />);
-      for (const question of questionsData) {
-        await waitFor(() =>
-          expect(screen.getByText(question.question_text)).toBeInTheDocument()
-        );
-        const answerOptions = screen.getAllByRole("radio");
-        await user.click(answerOptions[0]);
-      }
-      await waitFor(() => {
-        expect(
-          screen.getByRole("heading", { name: /Your AI Readiness Report/i })
-        ).toBeInTheDocument();
-      });
+
+      // Go to results page first
+      await completeAssessment(user);
 
       // Click restart
       const restartButton = screen.getByRole("button", {
