@@ -1,48 +1,37 @@
-# Name of the workflow
+# .github/workflows/pr-check.yml
 name: Pull Request Check
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on pull request events for the "main" branch
   pull_request:
     branches: ["main"]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This job is named "quality-checks"
   quality-checks:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # 1. Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Sets up Node.js, and crucially, caches your npm dependencies for faster installs
       - name: Set up Node.js with caching
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
 
-      # 3. Installs dependencies using 'npm ci' which is faster and safer for CI
       - name: Install dependencies
         run: npm ci
 
-      # 4. Runs the Prettier formatting check. This will fail if any code is not formatted.
       - name: Check code formatting
         run: npm run format:check
 
-      # Add this new step to run ESLint
       - name: Run linter check
         run: npm run lint
 
-      # Add this new step to run tests
-      - name: Run unit tests
-        run: npm test
+      - name: Run unit tests with coverage
+        run: npm run coverage
 
-      # 5. Runs the build command. This will fail if the app doesn't compile.
-      - name: Build application
-        run: npm run build
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} # Add this secret to your GitHub repository
+          fail_ci_if_error: true

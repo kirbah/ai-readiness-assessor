@@ -1,3 +1,4 @@
+// vite.config.js
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
@@ -10,5 +11,22 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: "./src/setupTests.ts",
+    coverage: {
+      provider: "v8", // or 'istanbul'
+      reporter: ["text", "lcov"], // Change to lcov for Codecov
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: [
+        "src/main.tsx",
+        "src/vite-env.d.ts",
+        "src/setupTests.ts",
+        "src/types.ts",
+        "**/*.test.tsx",
+      ],
+      // Optional: Set coverage thresholds
+      // lines: 80,
+      // functions: 80,
+      // branches: 80,
+      // statements: 80,
+    },
   },
 });
