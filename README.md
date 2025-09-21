@@ -4,6 +4,7 @@
 
 [![CI/CD Status](https://github.com/kirbah/ai-readiness-assessor/actions/workflows/deploy.yml/badge.svg)](https://github.com/kirbah/ai-readiness-assessor/actions)
 [![codecov](https://codecov.io/gh/kirbah/ai-readiness-assessor/graph/badge.svg?token=9D6LTCIJ4Z)](https://codecov.io/gh/kirbah/ai-readiness-assessor)
+
 ---
 
 ### **The Problem**
