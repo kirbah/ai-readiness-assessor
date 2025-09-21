@@ -145,7 +145,6 @@ function App() {
     setShowResults(false);
     setCurrentFilter("all");
     setEditMode(false);
-    localStorage.removeItem("aiAssessmentCurrentIndex");
     localStorage.removeItem("aiAssessmentAnswers");
     window.history.replaceState({}, document.title, window.location.pathname);
   }, []);

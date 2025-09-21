@@ -253,7 +253,6 @@ describe("App Integration Tests", () => {
 
       // Local storage should be cleared
       expect(localStorage.getItem("aiAssessmentAnswers")).toBeNull();
-      expect(localStorage.getItem("aiAssessmentCurrentIndex")).toBeNull();
 
       // Check GA event
       expect(ReactGA.event).toHaveBeenCalledWith({
