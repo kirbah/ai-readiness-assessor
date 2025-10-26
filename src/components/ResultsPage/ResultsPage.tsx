@@ -1,5 +1,5 @@
 import React from "react";
-import { Result } from "../types";
+import { Result } from "../../types";
 import ScoreSummary from "./ScoreSummary";
 import CallToAction from "./CallToAction";
 import DetailedResults from "./DetailedResults";

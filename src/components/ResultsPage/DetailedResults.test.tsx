@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import DetailedResults from "./DetailedResults";
-import { Result } from "../types";
+import { Result } from "../../types";
 
 const mockResults: Result[] = [
   {
