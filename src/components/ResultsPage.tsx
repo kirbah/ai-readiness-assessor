@@ -1,21 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { animate, motion, AnimatePresence } from "framer-motion";
-import ReactGA from "react-ga4";
-import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
+import React from "react";
 import { Result } from "../types";
-
-type ScoreStyle = {
-  icon: string;
-  color: string;
-  borderClass: string;
-};
-
-const scoreStyles: Record<number, ScoreStyle> = {
-  0: { icon: "🔴", color: "critical", borderClass: "border-danger" },
-  1: { icon: "🟡", color: "issues", borderClass: "border-warning" },
-  2: { icon: "🟢", color: "good", borderClass: "border-success" },
-};
+import ScoreSummary from "./ScoreSummary";
+import CallToAction from "./CallToAction";
+import DetailedResults from "./DetailedResults";
+import ShareResults from "./ShareResults";
 
 type Tier = "At Risk" | "Building Foundation" | "Well-Positioned";
 
@@ -71,10 +59,9 @@ interface Props {
   tier: Tier;
   results: Result[];
   shareableUrl: string;
-  initialFilter: string;
-  onFilterChange: (newFilter: string) => void;
   onEditQuestion: (questionId: number) => void;
   onRestart: () => void;
+  initialFilter?: string;
 }
 
 const ResultsPage: React.FC<Props> = ({
@@ -83,73 +70,17 @@ const ResultsPage: React.FC<Props> = ({
   tier,
   results,
   shareableUrl,
-  initialFilter,
-  onFilterChange,
   onEditQuestion,
   onRestart,
+  initialFilter,
 }) => {
-  const [filter, setFilter] = useState<string>(initialFilter || "all");
-  const [isCopied, setIsCopied] = useState(false);
-  const [animatedScore, setAnimatedScore] = useState(0);
-
   const currentTierConfig = tierConfigs[tier];
-
-  useEffect(() => {
-    const controls = animate(0, score, {
-      duration: 1.5,
-      ease: "easeOut",
-      onUpdate: (latest) => {
-        setAnimatedScore(Math.round(latest));
-      },
-    });
-
-    return () => controls.stop();
-  }, [score]);
-
-  // Calculate counts for filters
-  const criticalCount = results.filter((r) => r.score === 0).length;
-  const issuesCount = results.filter((r) => r.score <= 1).length;
-  const allCount = results.length;
-
-  // Filtered results based on current filter
-  const filteredResults = results.filter((result) => {
-    if (filter === "critical") return result.score === 0;
-    if (filter === "issues") return result.score <= 1;
-    return true; // all
-  });
-
-  const handleFilterChange = (newFilter: string) => {
-    setFilter(newFilter);
-    if (onFilterChange) {
-      onFilterChange(newFilter);
-    }
-  };
 
   const handleRestart = () => {
     if (onRestart) {
       onRestart();
     }
   };
-
-  const handleCopyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(shareableUrl || window.location.href);
-      setIsCopied(true);
-      ReactGA.event({
-        category: "User",
-        action: "Copied Shareable URL",
-      });
-      setTimeout(() => setIsCopied(false), 2500);
-    } catch (err) {
-      console.error("Failed to copy: ", err);
-    }
-  };
-
-  const calendlyUrl = shareableUrl
-    ? `https://calendly.com/kiryl-bahdanau/ai-readiness?a3=${encodeURIComponent(
-        shareableUrl
-      )}`
-    : "https://calendly.com/kiryl-bahdanau/ai-readiness";
 
   return (
     <div className="mt-5">
@@ -160,253 +91,27 @@ const ResultsPage: React.FC<Props> = ({
               <h1 className="h3 mb-0">Your AI Readiness Report</h1>
             </div>
             <div className="card-body p-4">
-              {/* Score Summary */}
-              <div className="text-center mb-5">
-                <div className="mb-4">
-                  <CircularProgressbar
-                    value={animatedScore}
-                    maxValue={total}
-                    text={`${animatedScore}/${total}`}
-                    styles={buildStyles({
-                      pathColor: `var(--bs-primary)`,
-                      textColor: `var(--bs-primary)`,
-                      trailColor: `#e9ecef`,
-                      backgroundColor: `#f8f9fa`,
-                    })}
-                  />
-                </div>
-                <h2 className={`text-${currentTierConfig.color} mb-1`}>
-                  {tier}
-                </h2>
-                <p className="lead text-muted">
-                  {currentTierConfig.description}
-                </p>
-              </div>
+              <ScoreSummary
+                score={score}
+                total={total}
+                tier={tier}
+                tierDescription={currentTierConfig.description}
+                tierColor={currentTierConfig.color}
+              />
 
-              {/* CTA Section */}
-              <div className="cta-block mb-5">
-                <h3 className="mb-3">{currentTierConfig.cta.headline}</h3>
-                <p
-                  data-testid="cta-paragraph"
-                  className="mb-4"
-                  dangerouslySetInnerHTML={{
-                    __html: currentTierConfig.cta.paragraph,
-                  }}
-                ></p>
-                <a
-                  href={calendlyUrl}
-                  className="btn btn-primary btn-lg"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => {
-                    ReactGA.event({
-                      category: "User",
-                      action: `Clicked ${currentTierConfig.cta.buttonText}`,
-                      label: tier,
-                    });
-                  }}
-                >
-                  <i className="bi bi-calendar3 me-2"></i>
-                  {currentTierConfig.cta.buttonText}
-                </a>
-              </div>
+              <CallToAction
+                tier={tier}
+                ctaContent={currentTierConfig.cta}
+                shareableUrl={shareableUrl}
+              />
 
-              {/* Detailed Results */}
-              <h3 className="mb-4">Detailed Assessment</h3>
+              <DetailedResults
+                results={results}
+                onEditQuestion={onEditQuestion}
+                initialFilter={initialFilter}
+              />
 
-              {/* Filter Tabs */}
-              <ul
-                className="nav nav-tabs justify-content-center mb-4"
-                role="tablist"
-              >
-                <li className="nav-item" role="presentation">
-                  <button
-                    className={`nav-link ${
-                      filter === "critical" ? "active" : ""
-                    }`}
-                    onClick={() => handleFilterChange("critical")}
-                    role="tab"
-                    aria-selected={filter === "critical"}
-                    aria-controls="critical-tab"
-                  >
-                    Critical ({criticalCount})
-                  </button>
-                </li>
-                <li className="nav-item" role="presentation">
-                  <button
-                    className={`nav-link ${
-                      filter === "issues" ? "active" : ""
-                    }`}
-                    onClick={() => handleFilterChange("issues")}
-                    role="tab"
-                    aria-selected={filter === "issues"}
-                    aria-controls="issues-tab"
-                  >
-                    Issues ({issuesCount})
-                  </button>
-                </li>
-                <li className="nav-item" role="presentation">
-                  <button
-                    className={`nav-link ${filter === "all" ? "active" : ""}`}
-                    onClick={() => handleFilterChange("all")}
-                    role="tab"
-                    aria-selected={filter === "all"}
-                    aria-controls="all-tab"
-                  >
-                    All ({allCount})
-                  </button>
-                </li>
-              </ul>
-
-              {filteredResults.length === 0 ? (
-                <p className="text-center text-muted">
-                  No results match the selected filter.
-                </p>
-              ) : (
-                <div className="accordion" id="resultsAccordion">
-                  <AnimatePresence mode="popLayout">
-                    {filteredResults.map((result, index) => {
-                      const styles =
-                        scoreStyles[result.score] || scoreStyles[2];
-                      const icon = styles.icon;
-                      const iconClass = styles.color;
-                      const isExpanded = false; // Default collapsed
-
-                      return (
-                        <motion.div
-                          key={result.question}
-                          layout
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -20 }}
-                          transition={{ duration: 0.3 }}
-                          className="accordion-item"
-                        >
-                          <h2
-                            className="accordion-header"
-                            id={`heading${index}`}
-                          >
-                            <button
-                              className={`accordion-button collapsed border-start border-4 ${styles.borderClass}`}
-                              type="button"
-                              data-bs-toggle="collapse"
-                              data-bs-target={`#collapse${index}`}
-                              aria-expanded={isExpanded}
-                              aria-controls={`collapse${index}`}
-                            >
-                              <div className="d-flex align-items-center w-100">
-                                <span
-                                  className={`result-icon ${iconClass} me-3`}
-                                >
-                                  {icon}
-                                </span>
-                                <div className="flex-grow-1">
-                                  <h6 className="mb-1">
-                                    Question {result.question}:{" "}
-                                    {result.question_text}
-                                  </h6>
-                                  <p className="mb-0 small text-muted">
-                                    Your Answer:{" "}
-                                    <strong>{result.selected_text}</strong>
-                                  </p>
-                                </div>
-                              </div>
-                            </button>
-                          </h2>
-                          <div
-                            id={`collapse${index}`}
-                            className="accordion-collapse collapse"
-                            aria-labelledby={`heading${index}`}
-                          >
-                            <div className="accordion-body">
-                              <motion.div
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, ease: "easeOut" }}
-                              >
-                                {result.question_clarification && (
-                                  <div className="mb-3">
-                                    <h6 className="fw-bold text-secondary mb-2">
-                                      Question Context
-                                    </h6>
-                                    <p className="small text-muted">
-                                      {result.question_clarification}
-                                    </p>
-                                  </div>
-                                )}
-
-                                {result.selected_clarification && (
-                                  <div className="mb-3">
-                                    <h6 className="fw-bold text-secondary mb-2">
-                                      Selection Context
-                                    </h6>
-                                    <p className="small text-muted">
-                                      {result.selected_clarification}
-                                    </p>
-                                  </div>
-                                )}
-
-                                {result.explanation && (
-                                  <div className="mb-3 info-box">
-                                    <h6 className="fw-bold mb-2 advisors-note-color">
-                                      Advisor's Note
-                                    </h6>
-                                    <p className="small">
-                                      {result.explanation}
-                                    </p>
-                                  </div>
-                                )}
-
-                                <div className="text-end mt-3">
-                                  <button
-                                    className="btn btn-outline-primary"
-                                    onClick={() =>
-                                      onEditQuestion(result.question)
-                                    }
-                                    aria-label={`Change answer for Question ${result.question}`}
-                                  >
-                                    Change My Answer
-                                  </button>
-                                </div>
-                              </motion.div>
-                            </div>
-                          </div>
-                        </motion.div>
-                      );
-                    })}
-                  </AnimatePresence>
-                </div>
-              )}
-
-              {/* Share Section */}
-              <div className="text-center mt-5">
-                <h4 className="mb-3">Share Your Results</h4>
-                <div
-                  className="input-group mb-3"
-                  style={{ maxWidth: "500px", margin: "0 auto" }}
-                >
-                  <input
-                    type="text"
-                    className="form-control readonly-url-input"
-                    value={shareableUrl || window.location.href}
-                    readOnly
-                    aria-label="Shareable results URL"
-                  />
-                  <button
-                    className="btn btn-outline-secondary"
-                    type="button"
-                    onClick={handleCopyToClipboard}
-                    aria-label="Copy share link"
-                  >
-                    <i className="bi bi-copy"></i>{" "}
-                    {isCopied ? "Copied!" : "Copy Link"}
-                  </button>
-                </div>
-                <small className="text-muted">
-                  Anyone with this link can see your AI readiness assessment
-                  results
-                </small>
-              </div>
+              <ShareResults shareableUrl={shareableUrl} />
 
               {/* Restart Section */}
               <div className="text-center mt-4">
