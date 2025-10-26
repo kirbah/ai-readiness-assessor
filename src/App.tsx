@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  useRef,
-} from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import LandingPage from "./components/LandingPage";
 import { AnimatePresence } from "framer-motion";
 import ReactGA from "react-ga4";
