@@ -41,6 +41,14 @@ describe("App Integration Tests", () => {
   const completeAssessment = async (
     user: ReturnType<typeof userEvent.setup>
   ) => {
+    // Ensure the assessment starts by clicking the button if the landing page is present
+    const startButton = screen.queryByRole("button", {
+      name: /Start the Free Assessment/i,
+    });
+    if (startButton) {
+      await user.click(startButton);
+    }
+
     for (const question of questionsData) {
       await waitFor(() =>
         expect(screen.getByText(question.question_text)).toBeInTheDocument()
@@ -210,6 +218,12 @@ describe("App Integration Tests", () => {
     it('should navigate to the previous question using the "Previous" button', async () => {
       const user = userEvent.setup();
       render(<App />);
+
+      // Click the "Start the Free Assessment" button on the landing page
+      const startButton = screen.getByRole("button", {
+        name: /Start the Free Assessment/i,
+      });
+      await user.click(startButton);
 
       // Answer first question to enable "Previous" button on the next one
       const firstAnswer = screen.getAllByRole("radio")[0];

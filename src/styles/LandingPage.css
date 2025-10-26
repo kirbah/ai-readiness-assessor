@@ -1,0 +1,67 @@
+.landing-page .card {
+  border: 1px solid #dee2e6;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+  margin: 2rem auto; /* Center the card with some margin */
+  text-align: left; /* Align text left inside the card */
+  border-radius: 0.5rem; /* Added border-radius to the card */
+}
+
+.landing-page .card-header {
+  background-color: #f8f9fa; /* A very light grey for the header */
+  border-bottom: 1px solid #dee2e6;
+  padding: 1.5rem;
+  border-top-left-radius: calc(0.5rem - 1px); /* Match card's border-radius */
+  border-top-right-radius: calc(0.5rem - 1px); /* Match card's border-radius */
+}
+
+.landing-page .card-header h1 {
+  font-size: 1.75rem; /* Slightly smaller H1 for the card context */
+  color: var(--bs-primary); /* Use the app's primary blue color */
+}
+
+.landing-page .card-body {
+  padding: 2.5rem; /* Generous padding */
+}
+
+.landing-page .pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2x2 grid on larger screens */
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.landing-page .pillar-item {
+  background-color: #f8f9fa;
+  border-left: 4px solid var(--bs-primary);
+  padding: 1rem;
+  border-radius: 0.25rem;
+}
+
+.landing-page .pillar-item strong {
+  font-size: 1.1rem;
+}
+
+.landing-page .pillar-item p {
+  font-size: 0.9rem;
+}
+
+.landing-page .cta-section {
+  text-align: center; /* Center the button inside the card body */
+  margin-top: 2.5rem;
+}
+
+.landing-page .btn-lg {
+  padding: 0.75rem 2rem;
+  font-size: 1.1rem;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .landing-page .pillars-grid {
+    grid-template-columns: 1fr; /* Stack pillars on top of each other */
+  }
+
+  .landing-page .card-body {
+    padding: 1.5rem;
+  }
+}
