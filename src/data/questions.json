@@ -278,5 +278,89 @@
         "explanation": "This is a dangerously naive assumption in any large enterprise. Failure to manage the human and political elements of a technology change is a primary reason why technically successful projects ultimately fail to be adopted."
       }
     ]
+  },
+  {
+    "id": 11,
+    "type": "contextual",
+    "question_text": "What is your most critical priority for your AI initiatives in the next 90 days?",
+    "question_clarification": "Understanding your immediate focus helps us contextualize your assessment results against your near-term goals.",
+    "answers": [
+      {
+        "id": "11a",
+        "answer_text": "De-risking a major ongoing pilot project",
+        "answer_clarification": "An active, funded project is underway, and ensuring its success and stability is the top priority."
+      },
+      {
+        "id": "11b",
+        "answer_text": "Finalizing our strategic roadmap and budget for next year",
+        "answer_clarification": "The focus is on high-level planning, securing investment, and setting the direction for the upcoming fiscal period."
+      },
+      {
+        "id": "11c",
+        "answer_text": "Upskilling our internal team and improving our processes",
+        "answer_clarification": "The priority is foundational work—improving the team's capabilities and operational maturity before new projects."
+      },
+      {
+        "id": "11d",
+        "answer_text": "Conducting initial research and exploring potential use cases",
+        "answer_clarification": "The focus is on discovery and R&D to identify opportunities, without a specific project commitment yet."
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "type": "contextual",
+    "question_text": "What do you see as the single biggest obstacle to achieving that priority?",
+    "question_clarification": "Successful AI adoption is rarely a pure technology problem. Pinpointing your primary obstacle helps identify the true nature of the challenge.",
+    "answers": [
+      {
+        "id": "12a",
+        "answer_text": "Technical Debt & Legacy System Integration",
+        "answer_clarification": "The challenge lies in building modern AI capabilities on top of an aging, complex, and fragile technology stack."
+      },
+      {
+        "id": "12b",
+        "answer_text": "Lack of clean, accessible, and reliable data",
+        "answer_clarification": "The 'garbage in, garbage out' problem. Our data is siloed, inconsistent, or untrustworthy, blocking progress."
+      },
+      {
+        "id": "12c",
+        "answer_text": "Internal skills gap and a shortage of senior talent",
+        "answer_clarification": "We have smart engineers, but lack the specific, senior-level experience required for enterprise-grade AI and MLOps."
+      },
+      {
+        "id": "12d",
+        "answer_text": "Misalignment between C-suite vision and engineering reality",
+        "answer_clarification": "The business has ambitious goals, but there's a disconnect with what the teams and systems can realistically deliver."
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "type": "contextual",
+    "question_text": "When seeking external expertise for a critical initiative, which approach do you typically favor?",
+    "question_clarification": "Every leader has a different philosophy on leveraging external partners. This helps us understand your preferred model of engagement.",
+    "answers": [
+      {
+        "id": "13a",
+        "answer_text": "A strategic advisor to guide our internal leadership",
+        "answer_clarification": "A long-term, high-level partner who acts as a trusted sounding board for the CTO and executive team."
+      },
+      {
+        "id": "13b",
+        "answer_text": "Hands-on oversight for a specific, high-risk project",
+        "answer_clarification": "A project-focused expert to provide deep technical guidance and de-risk a critical, time-bound initiative."
+      },
+      {
+        "id": "13c",
+        "answer_text": "Targeted workshops to upskill our team",
+        "answer_clarification": "Bringing in specialized knowledge to close a specific skill gap within our existing engineering team."
+      },
+      {
+        "id": "13d",
+        "answer_text": "We primarily rely on internal resources for this",
+        "answer_clarification": "Our standard approach is to build and solve challenges using our in-house talent and capabilities."
+      }
+    ]
   }
 ]

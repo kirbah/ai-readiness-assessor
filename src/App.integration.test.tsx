@@ -97,7 +97,7 @@ describe("App Integration Tests", () => {
 
       // The app should have started from the beginning
       expect(
-        screen.getByText("Question 1 of 10", { exact: false })
+        screen.getByText("Question 1 of 13", { exact: false })
       ).toBeInTheDocument();
 
       // And the invalid URL should be cleared
@@ -126,7 +126,7 @@ describe("App Integration Tests", () => {
 
       // The app should navigate to the first unanswered question (Question 2)
       expect(
-        screen.getByText("Question 2 of 10", { exact: false })
+        screen.getByText("Question 2 of 13", { exact: false })
       ).toBeInTheDocument();
       expect(
         screen.getByText(questionsData[1].question_text)
@@ -235,7 +235,7 @@ describe("App Integration Tests", () => {
 
       // We are on question 2
       await waitFor(() => {
-        expect(screen.getByText(/Question 2 of 10/i)).toBeInTheDocument();
+        expect(screen.getByText(/Question 2 of 13/i)).toBeInTheDocument();
       });
 
       // Click "Previous"
@@ -244,7 +244,7 @@ describe("App Integration Tests", () => {
 
       // We should be back on question 1
       await waitFor(() => {
-        expect(screen.getByText(/Question 1 of 10/i)).toBeInTheDocument();
+        expect(screen.getByText(/Question 1 of 13/i)).toBeInTheDocument();
       });
       // And the original answer should still be selected
       const selectedAnswer = screen.getAllByRole("radio")[0];
@@ -266,7 +266,7 @@ describe("App Integration Tests", () => {
 
       // Should be back to question 1
       await waitFor(() => {
-        expect(screen.getByText(/Question 1 of 10/i)).toBeInTheDocument();
+        expect(screen.getByText(/Question 1 of 13/i)).toBeInTheDocument();
       });
 
       // Local storage should be cleared
@@ -295,7 +295,7 @@ describe("App Integration Tests", () => {
       // Assert: The app should not crash and should start a fresh assessment
       await waitFor(() => {
         expect(
-          screen.getByText("Question 1 of 10", { exact: false })
+          screen.getByText("Question 1 of 13", { exact: false })
         ).toBeInTheDocument();
       });
 

@@ -33,7 +33,7 @@ describe("App", () => {
     // Check for the initial question
     await waitFor(() => {
       expect(
-        screen.getByText("Question 1 of 10", { exact: false })
+        screen.getByText("Question 1 of 13", { exact: false })
       ).toBeInTheDocument();
     });
     expect(
@@ -83,7 +83,7 @@ describe("App", () => {
     // Assert: The app should start on Question 4 (index 3)
     await waitFor(() => {
       expect(
-        screen.getByText("Question 4 of 10", { exact: false })
+        screen.getByText("Question 4 of 13", { exact: false })
       ).toBeInTheDocument();
     });
     expect(
