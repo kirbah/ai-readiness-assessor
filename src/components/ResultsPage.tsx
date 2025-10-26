@@ -62,6 +62,7 @@ interface Props {
   onEditQuestion: (questionId: number) => void;
   onRestart: () => void;
   initialFilter?: string;
+  onFilterChange?: (newFilter: string) => void;
 }
 
 const ResultsPage: React.FC<Props> = ({
@@ -73,6 +74,7 @@ const ResultsPage: React.FC<Props> = ({
   onEditQuestion,
   onRestart,
   initialFilter,
+  onFilterChange,
 }) => {
   const currentTierConfig = tierConfigs[tier];
 
@@ -109,6 +111,7 @@ const ResultsPage: React.FC<Props> = ({
                 results={results}
                 onEditQuestion={onEditQuestion}
                 initialFilter={initialFilter}
+                onFilterChange={onFilterChange}
               />
 
               <ShareResults shareableUrl={shareableUrl} />

@@ -18,12 +18,14 @@ interface Props {
   results: Result[];
   onEditQuestion: (questionId: number) => void;
   initialFilter?: string;
+  onFilterChange?: (newFilter: string) => void;
 }
 
 const DetailedResults: React.FC<Props> = ({
   results,
   onEditQuestion,
   initialFilter,
+  onFilterChange,
 }) => {
   const [filter, setFilter] = useState<string>(initialFilter || "all");
   const [expanded, setExpanded] = useState<number | false>(false);
@@ -42,7 +44,10 @@ const DetailedResults: React.FC<Props> = ({
 
   const handleFilterChange = (newFilter: string) => {
     setFilter(newFilter);
-    setExpanded(false); // Collapse accordion on filter change
+    setExpanded(false);
+    if (onFilterChange) {
+      onFilterChange(newFilter);
+    }
   };
 
   return (
