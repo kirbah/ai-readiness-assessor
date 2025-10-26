@@ -19,6 +19,52 @@ const scoreStyles: Record<number, ScoreStyle> = {
 
 type Tier = "At Risk" | "Building Foundation" | "Well-Positioned";
 
+interface CtaContent {
+  headline: string;
+  paragraph: string;
+  buttonText: string;
+}
+
+interface TierConfigData {
+  description: string;
+  color: "success" | "warning" | "danger";
+  cta: CtaContent;
+}
+
+const tierConfigs: Record<Tier, TierConfigData> = {
+  "At Risk": {
+    description:
+      "Your readiness level indicates critical gaps that pose a high risk of project failure.",
+    color: "danger",
+    cta: {
+      headline: "Your Results Indicate Critical Risks. Let's Build a Plan.",
+      paragraph: `This report highlights foundational risks that likely require immediate attention. The next step is a complimentary <strong>Architectural Sounding Board</strong> call to prioritize these issues and build a pragmatic plan to de-risk your AI roadmap.`,
+      buttonText: "Schedule Your De-Risking Call",
+    },
+  },
+  "Building Foundation": {
+    description:
+      "You have some foundational elements in place but also significant gaps to address.",
+    color: "warning",
+    cta: {
+      headline: "You Have a Strong Foundation. Let's Accelerate Your Progress.",
+      paragraph: `You have the groundwork in place, but there are clear opportunities to optimize. The next step is a complimentary <strong>Architectural Sounding Board</strong> call to identify the highest-impact improvements that will accelerate your AI initiatives and ensure long-term success.`,
+      buttonText: "Book an Acceleration Session",
+    },
+  },
+  "Well-Positioned": {
+    description:
+      "You have a strong foundation and can proceed with new AI initiatives with a higher degree of confidence.",
+    color: "success",
+    cta: {
+      headline:
+        "You're Well-Positioned. Let's Solidify Your Competitive Advantage.",
+      paragraph: `Your organization is ahead of the curve, which is a powerful position. To maintain and extend this advantage, the next step is a complimentary <strong>Architectural Sounding Board</strong> call to discuss advanced strategies and ensure your architecture is truly future-proof.`,
+      buttonText: "Book a Strategic Review",
+    },
+  },
+};
+
 interface Props {
   score: number;
   total: number;
@@ -46,21 +92,7 @@ const ResultsPage: React.FC<Props> = ({
   const [isCopied, setIsCopied] = useState(false);
   const [animatedScore, setAnimatedScore] = useState(0);
 
-  const tierDescriptions = {
-    "At Risk":
-      "Your readiness level indicates critical gaps that pose a high risk of project failure.",
-    "Building Foundation":
-      "You have some foundational elements in place but also significant gaps to address.",
-    "Well-Positioned":
-      "You have a strong foundation and can proceed with new AI initiatives with a higher degree of confidence.",
-  };
-
-  const tierColor =
-    tier === "Well-Positioned"
-      ? "success"
-      : tier === "Building Foundation"
-        ? "warning"
-        : "danger";
+  const currentTierConfig = tierConfigs[tier];
 
   useEffect(() => {
     const controls = animate(0, score, {
@@ -143,17 +175,23 @@ const ResultsPage: React.FC<Props> = ({
                     })}
                   />
                 </div>
-                <h2 className={`text-${tierColor} mb-1`}>{tier}</h2>
-                <p className="lead text-muted">{tierDescriptions[tier]}</p>
+                <h2 className={`text-${currentTierConfig.color} mb-1`}>
+                  {tier}
+                </h2>
+                <p className="lead text-muted">
+                  {currentTierConfig.description}
+                </p>
               </div>
 
               {/* CTA Section */}
               <div className="cta-block mb-5">
-                <h3 className="mb-3">Ready to Take the Next Step?</h3>
-                <p className="mb-4">
-                  Schedule a free consultation to discuss your results and
-                  create a customized AI roadmap for your organization.
-                </p>
+                <h3 className="mb-3">{currentTierConfig.cta.headline}</h3>
+                <p
+                  className="mb-4"
+                  dangerouslySetInnerHTML={{
+                    __html: currentTierConfig.cta.paragraph,
+                  }}
+                ></p>
                 <a
                   href={calendlyUrl}
                   className="btn btn-primary btn-lg"
@@ -162,13 +200,13 @@ const ResultsPage: React.FC<Props> = ({
                   onClick={() => {
                     ReactGA.event({
                       category: "User",
-                      action: "Clicked Book Consultation",
+                      action: `Clicked ${currentTierConfig.cta.buttonText}`,
                       label: tier,
                     });
                   }}
                 >
                   <i className="bi bi-calendar3 me-2"></i>
-                  Book Consultation Call
+                  {currentTierConfig.cta.buttonText}
                 </a>
               </div>
 
