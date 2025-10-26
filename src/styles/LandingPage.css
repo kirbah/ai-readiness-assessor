@@ -1,15 +1,17 @@
 .landing-page .card {
   border: 1px solid #dee2e6;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
-  max-width: 900px; /* Control the max width of the card */
   margin: 2rem auto; /* Center the card with some margin */
   text-align: left; /* Align text left inside the card */
+  border-radius: 0.5rem; /* Added border-radius to the card */
 }
 
 .landing-page .card-header {
   background-color: #f8f9fa; /* A very light grey for the header */
   border-bottom: 1px solid #dee2e6;
   padding: 1.5rem;
+  border-top-left-radius: calc(0.5rem - 1px); /* Match card's border-radius */
+  border-top-right-radius: calc(0.5rem - 1px); /* Match card's border-radius */
 }
 
 .landing-page .card-header h1 {
