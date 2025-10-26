@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Result } from "../types";
+import { Result } from "../../types";
 
 type ScoreStyle = {
   icon: string;
