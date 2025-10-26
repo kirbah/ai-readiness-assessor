@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useRef,
 } from "react";
+import LandingPage from "./components/LandingPage";
 import { AnimatePresence } from "framer-motion";
 import ReactGA from "react-ga4";
 import CookieConsent from "react-cookie-consent";
@@ -32,6 +33,7 @@ function App() {
   const [currentFilter, setCurrentFilter] = useState<string>("all");
   const [editMode, setEditMode] = useState<boolean>(false);
   const [urlError, setUrlError] = useState<string | null>(null);
+  const [assessmentStarted, setAssessmentStarted] = useState<boolean>(false);
 
   const questions: Question[] = questionsData;
   const questionsById = useMemo(() => {
@@ -188,7 +190,20 @@ function App() {
   }, []);
 
   useEffect(() => {
+    // If there are URL parameters for answers, or if there are saved answers,
+    // we should bypass the landing page and start the assessment directly.
     const urlParams = new URLSearchParams(window.location.search);
+    const savedAnswersStr = localStorage.getItem("aiAssessmentAnswers");
+    const hasUrlParams = Array.from(urlParams.keys()).some((key) =>
+      key.startsWith("q")
+    );
+    const hasSavedAnswers =
+      savedAnswersStr && Object.keys(JSON.parse(savedAnswersStr)).length > 0;
+
+    if (hasUrlParams || hasSavedAnswers) {
+      setAssessmentStarted(true);
+    }
+
     const urlAnswers: { [key: number]: string } = {};
     let hasAnyValidParam = false;
 
@@ -293,7 +308,9 @@ function App() {
 
   return (
     <div className="App d-flex flex-column min-vh-100">
-      {showResults ? (
+      {!assessmentStarted ? (
+        <LandingPage onStart={() => setAssessmentStarted(true)} />
+      ) : showResults ? (
         <div className="container-fluid py-4 flex-grow-1">
           <div className="container">
             <ResultsPage
