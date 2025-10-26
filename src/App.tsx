@@ -12,7 +12,7 @@ import CookieConsent from "react-cookie-consent";
 import questionsData from "./data/questions.json";
 import ProgressBar from "./components/ProgressBar";
 import QuestionCard from "./components/QuestionCard";
-import ResultsPage from "./components/ResultsPage";
+import ResultsPage from "./components/ResultsPage/ResultsPage";
 import { Question } from "./types";
 import "./styles/professional-theme.css";
 

@@ -181,10 +181,15 @@ describe("App Integration Tests", () => {
       expect(screen.getByText("Well-Positioned")).toBeInTheDocument();
 
       // Act: Click "Change My Answer" for the first question
-      const changeButtons = screen.getAllByLabelText(
-        /Change answer for Question/i
+      const accordionButtons = screen.getAllByRole("button", {
+        name: /Question \d+: /i,
+      });
+      await user.click(accordionButtons[0]);
+
+      const changeButton = await screen.findByLabelText(
+        /Change answer for Question 1/i
       );
-      await user.click(changeButtons[0]);
+      await user.click(changeButton);
 
       // Assert: We are back on the first question card
       await waitFor(() => {
