@@ -16,7 +16,7 @@ describe("LandingPage", () => {
 
     expect(
       screen.getByText(
-        /In under 5 minutes, diagnose the critical risks in your data, team, and production strategy to secure your roadmap and prevent costly delays./i
+        /Answer 10 core questions to diagnose critical risks in your data, team, and production strategy and receive an immediate plan to secure your roadmap./i
       )
     ).toBeInTheDocument();
   });
