@@ -187,6 +187,7 @@ const ResultsPage: React.FC<Props> = ({
               <div className="cta-block mb-5">
                 <h3 className="mb-3">{currentTierConfig.cta.headline}</h3>
                 <p
+                  data-testid="cta-paragraph"
                   className="mb-4"
                   dangerouslySetInnerHTML={{
                     __html: currentTierConfig.cta.paragraph,

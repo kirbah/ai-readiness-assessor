@@ -117,4 +117,99 @@ describe("ResultsPage", () => {
     expect(screen.queryByText(/Good Question 1/i)).not.toBeInTheDocument();
     expect(screen.getByText(/Critical Question 2/i)).toBeInTheDocument();
   });
+
+  describe("Dynamic CTA Content based on Tier", () => {
+    it('should display correct content for "At Risk" tier', () => {
+      render(<ResultsPage {...mockDefaultProps} tier="At Risk" results={[]} />);
+
+      expect(
+        screen.getByRole("heading", {
+          level: 3,
+          name: /Your Results Indicate Critical Risks\. Let's Build a Plan\./i,
+        })
+      ).toBeInTheDocument();
+      const atRiskParagraph = screen.getByTestId("cta-paragraph");
+      expect(atRiskParagraph.textContent).toContain(
+        "This report highlights foundational risks that likely require immediate attention."
+      );
+      expect(atRiskParagraph.textContent).toContain(
+        "Architectural Sounding Board"
+      );
+      expect(atRiskParagraph.textContent).toContain(
+        "call to prioritize these issues and build a pragmatic plan to de-risk your AI roadmap."
+      );
+      expect(
+        screen.getByRole("link", { name: /Schedule Your De-Risking Call/i })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Your readiness level indicates critical gaps/i)
+      ).toBeInTheDocument();
+    });
+
+    it('should display correct content for "Building Foundation" tier', () => {
+      render(
+        <ResultsPage
+          {...mockDefaultProps}
+          tier="Building Foundation"
+          results={[]}
+        />
+      );
+
+      expect(
+        screen.getByRole("heading", {
+          level: 3,
+          name: /You Have a Strong Foundation\. Let's Accelerate Your Progress\./i,
+        })
+      ).toBeInTheDocument();
+      const buildingFoundationParagraph = screen.getByTestId("cta-paragraph");
+      expect(buildingFoundationParagraph.textContent).toContain(
+        "You have the groundwork in place, but there are clear opportunities to optimize."
+      );
+      expect(buildingFoundationParagraph.textContent).toContain(
+        "Architectural Sounding Board"
+      );
+      expect(buildingFoundationParagraph.textContent).toContain(
+        "call to identify the highest-impact improvements that will accelerate your AI initiatives and ensure long-term success."
+      );
+      expect(
+        screen.getByRole("link", { name: /Book an Acceleration Session/i })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/You have some foundational elements in place/i)
+      ).toBeInTheDocument();
+    });
+
+    it('should display correct content for "Well-Positioned" tier', () => {
+      render(
+        <ResultsPage
+          {...mockDefaultProps}
+          tier="Well-Positioned"
+          results={[]}
+        />
+      );
+
+      expect(
+        screen.getByRole("heading", {
+          level: 3,
+          name: /You're Well-Positioned\. Let's Solidify Your Competitive Advantage\./i,
+        })
+      ).toBeInTheDocument();
+      const wellPositionedParagraph = screen.getByTestId("cta-paragraph");
+      expect(wellPositionedParagraph.textContent).toContain(
+        "Your organization is ahead of the curve, which is a powerful position."
+      );
+      expect(wellPositionedParagraph.textContent).toContain(
+        "Architectural Sounding Board"
+      );
+      expect(wellPositionedParagraph.textContent).toContain(
+        "call to discuss advanced strategies and ensure your architecture is truly future-proof."
+      );
+      expect(
+        screen.getByRole("link", { name: /Book a Strategic Review/i })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/You have a strong foundation and can proceed/i)
+      ).toBeInTheDocument();
+    });
+  });
 });
