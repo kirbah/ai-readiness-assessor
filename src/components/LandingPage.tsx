@@ -1,6 +1,6 @@
 import React from "react";
-import { motion, easeOut } from "framer-motion"; // Import motion
-import "../styles/LandingPage.css"; // Import the new CSS file
+import { motion, easeOut } from "framer-motion";
+import "../styles/LandingPage.css";
 
 interface LandingPageProps {
   onStart: () => void;
@@ -40,9 +40,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
           </div>
           <div className="card-body">
             <p className="lead text-center mb-5">
-              In under 5 minutes, diagnose the critical risks in your data,
-              team, and production strategy to secure your roadmap and prevent
-              costly delays.
+              Answer 10 core questions to diagnose critical risks in your data,
+              team, and production strategy and receive an immediate plan to
+              secure your roadmap.
             </p>
 
             <motion.div
@@ -96,8 +96,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
                 Start the Free Assessment
               </motion.button>
               <p className="text-muted small">
-                Takes under 5 minutes | 100% Confidential | Instant, Actionable
-                Results
+                Takes under 5 minutes | 100% Confidential | Get Immediate,
+                Actionable Recommendations
               </p>
             </div>
           </div>
