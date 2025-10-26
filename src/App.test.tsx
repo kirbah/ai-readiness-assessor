@@ -25,10 +25,18 @@ describe("App", () => {
     const user = userEvent.setup();
     render(<App />);
 
+    // Click the "Start the Free Assessment" button on the landing page
+    const startButton = screen.getByRole("button", {
+      name: /Start the Free Assessment/i,
+    });
+    await user.click(startButton);
+
     // Check for the initial question
-    expect(
-      screen.getByText("Question 1 of 10", { exact: false })
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.getByText("Question 1 of 10", { exact: false })
+      ).toBeInTheDocument();
+    });
     expect(
       screen.getByText(questionsData[0].question_text)
     ).toBeInTheDocument();

@@ -87,6 +87,7 @@ function App() {
         localStorage.removeItem("aiAssessmentAnswers");
         setUserAnswers({});
         setCurrentQuestionIndex(0);
+        setAssessmentStarted(true); // Ensure assessment starts after clearing corrupted data
       }
     }
   }, [totalQuestions, questions]);
