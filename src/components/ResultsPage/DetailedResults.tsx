@@ -8,10 +8,11 @@ type ScoreStyle = {
   borderClass: string;
 };
 
-const scoreStyles: Record<number, ScoreStyle> = {
+const scoreStyles: Record<number | string, ScoreStyle> = {
   0: { icon: "🔴", color: "critical", borderClass: "border-danger" },
   1: { icon: "🟡", color: "issues", borderClass: "border-warning" },
   2: { icon: "🟢", color: "good", borderClass: "border-success" },
+  contextual: { icon: "🔵", color: "contextual", borderClass: "border-info" },
 };
 
 interface Props {
@@ -30,15 +31,24 @@ const DetailedResults: React.FC<Props> = ({
   const [filter, setFilter] = useState<string>(initialFilter || "all");
   const [expanded, setExpanded] = useState<number | false>(false);
 
-  // Calculate counts for filters
-  const criticalCount = results.filter((r) => r.score === 0).length;
-  const issuesCount = results.filter((r) => r.score <= 1).length;
-  const allCount = results.length;
+  // Calculate counts for filters, excluding contextual questions
+  const nonContextualResults = results.filter((r) => r.type !== "contextual");
+  const criticalCount = nonContextualResults.filter(
+    (r) => r.score === 0
+  ).length;
+  const issuesCount = nonContextualResults.filter(
+    (r) => r.score !== undefined && r.score <= 1
+  ).length;
+  const allCount = results.length; // All questions, including contextual
 
   // Filtered results based on current filter
   const filteredResults = results.filter((result) => {
+    if (result.type === "contextual") {
+      return filter === "all"; // Contextual questions only show in "All"
+    }
     if (filter === "critical") return result.score === 0;
-    if (filter === "issues") return result.score <= 1;
+    if (filter === "issues")
+      return result.score !== undefined && result.score <= 1;
     return true; // all
   });
 
@@ -99,7 +109,11 @@ const DetailedResults: React.FC<Props> = ({
         <div className="accordion" id="resultsAccordion">
           <AnimatePresence mode="popLayout">
             {filteredResults.map((result, index) => {
-              const styles = scoreStyles[result.score] || scoreStyles[2];
+              const scoreKey =
+                result.type === "contextual"
+                  ? "contextual"
+                  : (result.score ?? 2); // Default to 2 (good) if score is undefined and not contextual
+              const styles = scoreStyles[scoreKey] || scoreStyles[2];
               const icon = styles.icon;
               const iconClass = styles.color;
               const isExpanded = expanded === index;
@@ -176,14 +190,15 @@ const DetailedResults: React.FC<Props> = ({
                             </div>
                           )}
 
-                          {result.explanation && (
-                            <div className="mb-3 info-box">
-                              <h6 className="fw-bold mb-2 advisors-note-color">
-                                Advisor's Note
-                              </h6>
-                              <p className="small">{result.explanation}</p>
-                            </div>
-                          )}
+                          {result.explanation &&
+                            result.type !== "contextual" && (
+                              <div className="mb-3 info-box">
+                                <h6 className="fw-bold mb-2 advisors-note-color">
+                                  Advisor's Note
+                                </h6>
+                                <p className="small">{result.explanation}</p>
+                              </div>
+                            )}
 
                           <div className="text-end mt-3">
                             <button

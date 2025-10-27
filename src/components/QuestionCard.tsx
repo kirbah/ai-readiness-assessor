@@ -38,6 +38,20 @@ const QuestionCard: React.FC<Props> = ({
       transition={{ duration: 0.5, ease: "easeInOut" }}
     >
       <div className="card-body">
+        {question.type === "contextual" && (
+          <div className="contextual-callout mb-4" role="alert">
+            <div className="d-flex align-items-center">
+              <i className="bi bi-info-circle-fill me-3"></i>
+              <div>
+                <h5 className="callout-heading mb-1">Final Details</h5>
+                <p className="callout-text mb-0">
+                  The following questions will not affect your score but will
+                  help add context to your report.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
         <h2 className="h4 mb-3 fw-bold">{question.question_text}</h2>
         {question.question_clarification && (
           <div className="info-box mb-3" role="note">

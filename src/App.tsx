@@ -41,12 +41,14 @@ function App() {
   }, [questions]);
 
   const maxScore = useMemo(() => {
-    return questions.reduce((total, question) => {
-      const highestAnswerScore = Math.max(
-        ...question.answers.map((a) => a.score)
-      );
-      return total + highestAnswerScore;
-    }, 0);
+    return questions
+      .filter((q) => q.type !== "contextual")
+      .reduce((total, question) => {
+        const highestAnswerScore = Math.max(
+          ...question.answers.map((a) => a.score || 0)
+        );
+        return total + highestAnswerScore;
+      }, 0);
   }, [questions]);
 
   const totalQuestions = questions.length;
@@ -168,10 +170,10 @@ function App() {
     let totalScore = 0;
     Object.entries(userAnswers).forEach(([questionId, answerId]) => {
       const question = questionsById[parseInt(questionId, 10)];
-      if (question) {
+      if (question && question.type !== "contextual") {
         const answer = question.answers.find((a) => a.id === answerId);
         if (answer) {
-          totalScore += answer.score;
+          totalScore += answer.score || 0;
         }
       }
     });
@@ -332,10 +334,12 @@ function App() {
                     selected_clarification: answer
                       ? answer.answer_clarification
                       : "",
-                    score: answer ? answer.score : 0,
-                    explanation: answer
-                      ? answer.explanation
-                      : "No explanation available",
+                    score:
+                      question?.type === "contextual"
+                        ? undefined
+                        : (answer?.score ?? 0),
+                    explanation: answer?.explanation ?? undefined, // Set to undefined for contextual questions or if no explanation
+                    type: question?.type,
                   };
                 }
               )}

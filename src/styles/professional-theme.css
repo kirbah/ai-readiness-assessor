@@ -317,6 +317,10 @@ h4 {
   color: #28a745;
 }
 
+.result-icon.contextual {
+  color: var(--bs-info);
+}
+
 /* CTA Block */
 .cta-block {
   background-color: var(--bs-light);
@@ -465,4 +469,33 @@ footer p {
 
   /* This is the crucial fix. It clips the animation, preventing scrollbars. */
   overflow: hidden;
+}
+
+/* Callout Box for Contextual Questions */
+.contextual-callout {
+  background-color: #eef3f7;
+  border-left: 5px solid var(--bs-primary);
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  margin-left: -2rem;
+  margin-right: -2rem;
+}
+
+.contextual-callout .bi-info-circle-fill {
+  font-size: 1.75rem;
+  color: var(--bs-primary);
+}
+
+.contextual-callout .callout-heading {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--bs-secondary);
+}
+
+.contextual-callout .callout-text {
+  font-family: "Inter", sans-serif;
+  font-size: 0.95rem;
+  color: #495057;
+  line-height: 1.5;
 }

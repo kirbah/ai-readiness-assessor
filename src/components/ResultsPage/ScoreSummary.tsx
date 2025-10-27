@@ -51,6 +51,11 @@ const ScoreSummary: React.FC<Props> = ({
       </div>
       <h2 className={`text-${tierColor} mb-1`}>{tier}</h2>
       <p className="lead text-muted">{tierDescription}</p>
+      <small className="text-muted">
+        Please note: Your score is calculated based on the 10 strategic
+        readiness questions. The final 3 questions provide context for your
+        personalized report.
+      </small>
     </div>
   );
 };
