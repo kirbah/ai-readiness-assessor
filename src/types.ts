@@ -20,6 +20,7 @@ export interface Result {
   question_clarification?: string;
   selected_text: string;
   selected_clarification?: string;
-  score: number;
-  explanation: string;
+  score?: number;
+  explanation?: string;
+  type?: string;
 }

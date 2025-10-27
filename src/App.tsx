@@ -334,9 +334,12 @@ function App() {
                     selected_clarification: answer
                       ? answer.answer_clarification
                       : "",
-                    score: answer?.score ?? 0,
-                    explanation:
-                      answer?.explanation ?? "No explanation available",
+                    score:
+                      question?.type === "contextual"
+                        ? undefined
+                        : (answer?.score ?? 0),
+                    explanation: answer?.explanation ?? undefined, // Set to undefined for contextual questions or if no explanation
+                    type: question?.type,
                   };
                 }
               )}
