@@ -25,11 +25,13 @@ const mockLocation = (search: string) => {
 };
 
 const mockReplaceState = vi.fn();
+const mockPushState = vi.fn();
 Object.defineProperty(window, "history", {
   writable: true,
   value: {
     ...window.history,
     replaceState: mockReplaceState,
+    pushState: mockPushState,
   },
 });
 
