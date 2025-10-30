@@ -33,35 +33,33 @@ Object.defineProperty(window, "history", {
   },
 });
 
+// Helper function to complete the assessment
+const completeAssessment = async (user: ReturnType<typeof userEvent.setup>) => {
+  // Ensure the assessment starts by clicking the button if the landing page is present
+  const startButton = screen.queryByRole("button", {
+    name: /Start the Free Assessment/i,
+  });
+  if (startButton) {
+    await user.click(startButton);
+  }
+
+  for (const question of questionsData) {
+    await waitFor(() =>
+      expect(screen.getByText(question.question_text)).toBeInTheDocument()
+    );
+    // Select the FIRST answer for every question (score: 2)
+    const answerOptions = screen.getAllByRole("radio");
+    await user.click(answerOptions[0]);
+  }
+  await waitFor(() => {
+    expect(
+      screen.getByRole("heading", { name: /Your AI Readiness Report/i })
+    ).toBeInTheDocument();
+  });
+};
+
 describe("App Integration Tests", () => {
   const scrollToMock = vi.fn();
-
-  // Helper function to complete the assessment
-  const completeAssessment = async (
-    user: ReturnType<typeof userEvent.setup>
-  ) => {
-    // Ensure the assessment starts by clicking the button if the landing page is present
-    const startButton = screen.queryByRole("button", {
-      name: /Start the Free Assessment/i,
-    });
-    if (startButton) {
-      await user.click(startButton);
-    }
-
-    for (const question of questionsData) {
-      await waitFor(() =>
-        expect(screen.getByText(question.question_text)).toBeInTheDocument()
-      );
-      // Select the FIRST answer for every question (score: 2)
-      const answerOptions = screen.getAllByRole("radio");
-      await user.click(answerOptions[0]);
-    }
-    await waitFor(() => {
-      expect(
-        screen.getByRole("heading", { name: /Your AI Readiness Report/i })
-      ).toBeInTheDocument();
-    });
-  };
 
   beforeEach(() => {
     window.scrollTo = scrollToMock;
@@ -309,6 +307,103 @@ describe("App Integration Tests", () => {
       expect(localStorage.getItem("aiAssessmentAnswers")).toBeNull();
 
       consoleErrorSpy.mockRestore();
+    });
+  });
+
+  describe("Contextual Questions Logic", () => {
+    it("should not include contextual answers in the initial score calculation", async () => {
+      const user = userEvent.setup();
+      render(<App />);
+
+      // Act: Start assessment and answer all scorable questions for a perfect score
+      const startButton = screen.getByRole("button", {
+        name: /Start the Free Assessment/i,
+      });
+      await user.click(startButton);
+
+      const scorableQuestions = questionsData.filter(
+        (q) => q.type !== "contextual"
+      );
+      for (const question of scorableQuestions) {
+        await waitFor(() =>
+          expect(screen.getByText(question.question_text)).toBeInTheDocument()
+        );
+        const firstAnswer = screen.getAllByRole("radio")[0];
+        await user.click(firstAnswer); // Assuming first answer gives max score
+      }
+
+      // Assert: We are now on the first contextual question
+      await waitFor(() =>
+        expect(
+          screen.getByText(questionsData[10].question_text)
+        ).toBeInTheDocument()
+      );
+
+      // Act: Answer all contextual questions
+      const contextualQuestions = questionsData.filter(
+        (q) => q.type === "contextual"
+      );
+      for (const question of contextualQuestions) {
+        await waitFor(() =>
+          expect(screen.getByText(question.question_text)).toBeInTheDocument()
+        );
+        const firstAnswer = screen.getAllByRole("radio")[0];
+        await user.click(firstAnswer);
+      }
+
+      // Assert: The final score on the results page should only reflect the scorable questions
+      await waitFor(() =>
+        expect(
+          screen.getByRole("heading", { name: /Your AI Readiness Report/i })
+        ).toBeInTheDocument()
+      );
+      expect(screen.getByText("20/20")).toBeInTheDocument();
+      expect(screen.getByText("Well-Positioned")).toBeInTheDocument();
+    });
+
+    it("should not change the score when a contextual answer is edited from the results page", async () => {
+      const user = userEvent.setup();
+      render(<App />);
+
+      // Arrange: Complete the entire assessment to get to the results page
+      await completeAssessment(user);
+      await waitFor(() =>
+        expect(
+          screen.getByRole("heading", { name: /Your AI Readiness Report/i })
+        ).toBeInTheDocument()
+      );
+      expect(screen.getByText("20/20")).toBeInTheDocument(); // Verify initial state
+
+      // Act: Find a contextual question (e.g., Question 11) and change the answer
+      const accordionButtons = screen.getAllByRole("button", {
+        name: /Question \d+:/i,
+      });
+      await user.click(accordionButtons[10]); // Open Question 11 accordion
+
+      const changeButton = await screen.findByLabelText(
+        /Change answer for Question 11/i
+      );
+      await user.click(changeButton);
+
+      // Assert: We are taken back to the question card for Question 11
+      await waitFor(() =>
+        expect(
+          screen.getByText(questionsData[10].question_text)
+        ).toBeInTheDocument()
+      );
+
+      // Act: Select a *different* answer (the second option)
+      const secondAnswer = screen.getAllByRole("radio")[1];
+      await user.click(secondAnswer);
+
+      // Assert: The app should return to the results page, and the score must remain unchanged
+      await waitFor(() =>
+        expect(
+          screen.getByRole("heading", { name: /Your AI Readiness Report/i })
+        ).toBeInTheDocument()
+      );
+      expect(screen.getByText("20/20")).toBeInTheDocument();
+      expect(screen.getByText("Well-Positioned")).toBeInTheDocument();
     });
   });
 
