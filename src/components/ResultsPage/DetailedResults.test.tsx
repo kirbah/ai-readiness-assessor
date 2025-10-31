@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import DetailedResults from "./DetailedResults";
 import { Result } from "../../types";
 
@@ -44,6 +44,16 @@ const mockResults: Result[] = [
 ];
 
 describe("DetailedResults", () => {
+  const scrollToMock = vi.fn();
+
+  beforeEach(() => {
+    window.scrollTo = scrollToMock;
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it("renders the detailed assessment heading", () => {
     render(<DetailedResults results={[]} onEditQuestion={vi.fn()} />);
     expect(
