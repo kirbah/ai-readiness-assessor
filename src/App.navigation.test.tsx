@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import App from "./App";
@@ -58,9 +58,11 @@ describe("App Navigation Tests", () => {
     );
 
     // 2. Act: Simulate Browser "Back" Button
-    window.history.back();
-    // Manually dispatch popstate because JSDOM doesn't do it automatically
-    window.dispatchEvent(new PopStateEvent("popstate"));
+    act(() => {
+      window.history.back();
+      // Manually dispatch popstate because JSDOM doesn't do it automatically
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    });
 
     // 3. Assert: State After First "Back" Action
     await waitFor(() => {
@@ -74,8 +76,10 @@ describe("App Navigation Tests", () => {
     });
 
     // 4. Act: Simulate a Second "Back" Action
-    window.history.back();
-    window.dispatchEvent(new PopStateEvent("popstate"));
+    act(() => {
+      window.history.back();
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    });
 
     // 5. Assert: State After Second "Back" Action
     await waitFor(() => {
@@ -89,8 +93,10 @@ describe("App Navigation Tests", () => {
     });
 
     // 6. Act: Simulate Browser "Forward" Button
-    window.history.forward();
-    window.dispatchEvent(new PopStateEvent("popstate"));
+    act(() => {
+      window.history.forward();
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    });
 
     // 7. Assert: State After "Forward" Action
     await waitFor(() => {
