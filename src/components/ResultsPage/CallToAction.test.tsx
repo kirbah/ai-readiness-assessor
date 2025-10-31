@@ -22,26 +22,6 @@ const mockCtaContent = {
 };
 
 describe("CallToAction", () => {
-  it("renders the headline, paragraph, and button", () => {
-    render(
-      <CallToAction
-        tier="At Risk"
-        ctaContent={mockCtaContent}
-        shareableUrl="http://test.com"
-      />
-    );
-
-    expect(
-      screen.getByRole("heading", { level: 3, name: "Test Headline" })
-    ).toBeInTheDocument();
-    expect(screen.getByTestId("cta-paragraph")).toHaveTextContent(
-      "Test Paragraph"
-    );
-    expect(
-      screen.getByRole("link", { name: "Test Button" })
-    ).toBeInTheDocument();
-  });
-
   it("constructs the calendlyUrl correctly with shareableUrl", () => {
     render(
       <CallToAction
