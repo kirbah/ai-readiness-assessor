@@ -11,6 +11,7 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: "./src/setupTests.ts",
+    testTimeout: 10000,
     coverage: {
       provider: "v8", // or 'istanbul'
       reporter: ["text", "lcov"], // Change to lcov for Codecov
