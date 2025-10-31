@@ -28,6 +28,7 @@ function App() {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [urlError, setUrlError] = useState<string | null>(null);
   const [assessmentStarted, setAssessmentStarted] = useState<boolean>(false);
+  const [initialUrlProcessed, setInitialUrlProcessed] = useState(false);
 
   const questions: Question[] = questionsData;
   const questionsById = useMemo(() => {
@@ -282,7 +283,43 @@ function App() {
     if (filterParam && ["critical", "issues", "all"].includes(filterParam)) {
       setCurrentFilter(filterParam);
     }
+    setInitialUrlProcessed(true); // Mark initial URL processing as complete
   }, [questions, questionsById, totalQuestions]);
+
+  // Effect to handle browser back/forward navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      // Avoid handling popstate until the initial URL has been processed
+      // to prevent conflicts with the initial state setup logic.
+      if (!initialUrlProcessed) {
+        return;
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const questionId = params.get("question");
+
+      if (questionId) {
+        const questionIndex = questions.findIndex(
+          (q) => q.id === parseInt(questionId, 10)
+        );
+        if (questionIndex !== -1) {
+          setShowResults(false);
+          setCurrentQuestionIndex(questionIndex);
+        }
+      } else if (params.has("results")) {
+        setShowResults(true);
+      } else if (!window.location.search) {
+        // If there are no params, it might mean going back to the landing page state
+        handleRestart(); // Or reset to a specific initial state
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [initialUrlProcessed, questions, handleRestart]);
 
   useEffect(() => {
     if (showResults) {
@@ -300,6 +337,44 @@ function App() {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     }
   }, [showResults]);
+
+  // Effect to push state to browser history
+  useEffect(() => {
+    // Only push to history after the initial URL has been processed to avoid
+    // overwriting the initial state or creating unwanted history entries.
+    if (!initialUrlProcessed) {
+      return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const currentQuestionId = questions[currentQuestionIndex]?.id;
+
+    if (showResults) {
+      // If showing results, and we are not already on the results URL
+      if (!params.has("results")) {
+        window.history.pushState(
+          { page: "results" },
+          "",
+          `?results=true` // A simple results marker
+        );
+      }
+    } else if (assessmentStarted && currentQuestionId) {
+      // If in the assessment, and we're not already on the correct question URL
+      if (params.get("question") !== currentQuestionId.toString()) {
+        window.history.pushState(
+          { question: currentQuestionId },
+          "",
+          `?question=${currentQuestionId}`
+        );
+      }
+    }
+  }, [
+    currentQuestionIndex,
+    showResults,
+    assessmentStarted,
+    initialUrlProcessed,
+    questions,
+  ]);
 
   const currentQuestion = questions[currentQuestionIndex];
 
