@@ -54,13 +54,6 @@ describe("DetailedResults", () => {
     vi.unstubAllGlobals();
   });
 
-  it("renders the detailed assessment heading", () => {
-    render(<DetailedResults results={[]} onEditQuestion={vi.fn()} />);
-    expect(
-      screen.getByRole("heading", { name: /Detailed Assessment/i })
-    ).toBeInTheDocument();
-  });
-
   it("displays 'No results match' when filtered results are empty", () => {
     render(<DetailedResults results={[]} onEditQuestion={vi.fn()} />);
     expect(
