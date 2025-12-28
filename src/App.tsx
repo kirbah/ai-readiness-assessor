@@ -252,18 +252,6 @@ function App() {
         setUrlError(
           "The assessment link is incomplete. Please complete the remaining questions."
         );
-      } else {
-        // Fallback: treat as invalid
-        setUrlError(
-          "The assessment link contains invalid or incomplete data. Starting a new evaluation."
-        );
-        setUserAnswers({});
-        setCurrentQuestionIndex(0);
-        window.history.replaceState(
-          {},
-          document.title,
-          window.location.pathname
-        );
       }
     } else if (hasAnyValidParam) {
       // No valid answers, but some q params were present (all invalid)
