@@ -107,9 +107,13 @@ describe("App User Flow Tests", () => {
       });
       await user.click(restartButton);
 
-      // Should be back to question 1
+      // Should be back on the landing page
       await waitFor(() => {
-        expect(screen.getByText(/Question 1 of 13/i)).toBeInTheDocument();
+        expect(
+          screen.getByRole("heading", {
+            name: /Is your AI strategy built on a solid engineering foundation/i,
+          })
+        ).toBeInTheDocument();
       });
 
       // Local storage should be cleared
