@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent, act } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import App from "./App";
 import { setupTests, mockLocation, mockReplaceState } from "./utils/testUtils";
@@ -125,6 +125,114 @@ describe("App URL and State Loading Tests", () => {
       expect(localStorage.getItem("aiAssessmentAnswers")).toBeNull();
 
       consoleErrorSpy.mockRestore();
+    });
+  });
+});
+
+describe("Browser Navigation (Back/Forward) Event Handling", () => {
+  setupTests();
+
+  it("should ignore popstate events until the initial URL is processed", async () => {
+    // Arrange: Set up a URL, but don't process it yet.
+    mockLocation("?q1=1a");
+    const { rerender } = render(<App />);
+
+    // Act: Fire a popstate event BEFORE the app has processed the initial URL.
+    // We can't directly control the 'initialUrlProcessed' state, so we'll
+    // rely on the fact it's false on the very first render.
+    act(() => {
+      fireEvent(window, new PopStateEvent("popstate"));
+    });
+
+    // Let the app process the initial URL by re-rendering
+    rerender(<App />);
+
+    // Assert: The app should be on Question 2, as determined by the initial URL,
+    // not by the popstate event.
+    await waitFor(() => {
+      expect(
+        screen.getByText(questionsData[1].question_text)
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("should show the results page when navigating back to a results URL", async () => {
+    // Arrange: Start the app and complete the assessment to get to the results page.
+    render(<App />);
+    fireEvent.click(screen.getByText("Start the Free Assessment"));
+
+    // Answer all questions
+    for (const q of questionsData) {
+      const firstAnswer = q.answers[0];
+      fireEvent.click(screen.getByText(firstAnswer.answer_text));
+      // The last question will automatically go to the results page.
+      if (q.id !== questionsData[questionsData.length - 1].id) {
+        await screen.findByText(
+          `Question ${q.id + 1} of ${questionsData.length}`
+        );
+      }
+    }
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { name: /Your AI Readiness Report/i })
+      ).toBeInTheDocument();
+    });
+
+    // Act 1: Edit an answer
+    const accordionButton = screen.getAllByRole("button", {
+      name: /Question 1:/i,
+    })[0];
+    fireEvent.click(accordionButton);
+    const editButton = screen.getAllByText("Change My Answer")[0];
+    fireEvent.click(editButton);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(questionsData[0].question_text)
+      ).toBeInTheDocument();
+    });
+
+    // Act 2: Simulate Browser Back Button
+    act(() => {
+      // FIX: Manually update the mock location because pushState mock won't do it
+      mockLocation("?results=true");
+      fireEvent(window, new PopStateEvent("popstate"));
+    });
+
+    // Assert
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { name: /Your AI Readiness Report/i })
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("should return to the landing page when navigating back to the root URL", async () => {
+    // Arrange: Start the assessment.
+    render(<App />);
+    fireEvent.click(screen.getByText("Start the Free Assessment"));
+    await waitFor(() => {
+      expect(
+        screen.getByText("Question 1 of 13", { exact: false })
+      ).toBeInTheDocument();
+    });
+
+    // Act: Simulate Browser Back Button to Root
+    act(() => {
+      // FIX: Manually update the mock location to root
+      mockLocation("");
+      fireEvent(window, new PopStateEvent("popstate"));
+    });
+
+    // Assert
+    await waitFor(() => {
+      // FIX: Update text to match actual LandingPage content
+      expect(
+        screen.getByRole("heading", {
+          name: /Is your AI strategy built on a solid engineering foundation/i,
+        })
+      ).toBeInTheDocument();
     });
   });
 });

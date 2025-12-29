@@ -145,6 +145,7 @@ function App() {
     setShowResults(false);
     setCurrentFilter("all");
     setEditMode(false);
+    setAssessmentStarted(false); // <--- ADD THIS
     localStorage.removeItem("aiAssessmentAnswers");
     window.history.replaceState({}, document.title, window.location.pathname);
   }, []);
@@ -298,7 +299,7 @@ function App() {
         setShowResults(true);
       } else if (!window.location.search) {
         // If there are no params, it might mean going back to the landing page state
-        handleRestart(); // Or reset to a specific initial state
+        handleRestart();
       }
     };
 
