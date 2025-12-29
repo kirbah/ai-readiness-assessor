@@ -1,4 +1,10 @@
-import { render, screen, waitFor, fireEvent, act } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitFor,
+  fireEvent,
+  act,
+} from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import App from "./App";
 import { setupTests, mockLocation, mockReplaceState } from "./utils/testUtils";
