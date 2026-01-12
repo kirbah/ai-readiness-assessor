@@ -9,7 +9,7 @@
     "framer-motion": "^12.23.26",
     "react": "^19.2.3",
     "react-circular-progressbar": "^2.2.0",
-    "react-cookie-consent": "^9.0.0",
+    "react-cookie-consent": "^10.0.0",
     "react-dom": "^19.2.3",
     "react-ga4": "^2.1.0"
   },
