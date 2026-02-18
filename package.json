@@ -7,10 +7,10 @@
   "dependencies": {
     "bootstrap": "^5.3.8",
     "framer-motion": "^12.23.26",
-    "react": "^19.2.3",
+    "react": "^19.2.4",
     "react-circular-progressbar": "^2.2.0",
     "react-cookie-consent": "^10.0.1",
-    "react-dom": "^19.2.3",
+    "react-dom": "^19.2.4",
     "react-ga4": "^2.1.0"
   },
   "scripts": {
@@ -37,7 +37,7 @@
     "@testing-library/react": "^16.3.1",
     "@testing-library/user-event": "^14.6.1",
     "@types/node": "^24.10.13",
-    "@types/react": "^19.2.9",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^8.55.0",
     "@typescript-eslint/parser": "^8.44.0",
