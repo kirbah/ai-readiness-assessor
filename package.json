@@ -14,7 +14,7 @@
     "react-ga4": "^2.1.0"
   },
   "scripts": {
-    "start": "vite --host",
+    "dev": "vite --host",
     "build": "vite build",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
